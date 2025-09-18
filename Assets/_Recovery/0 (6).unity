@@ -2151,36 +2151,8 @@ PrefabInstance:
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
       propertyPath: attackVelocity.Array.size
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.data[0].x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.data[0].y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.data[1].x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.data[1].y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.data[2].x
-      value: 2.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
-      propertyPath: AttackVelocity.Array.data[2].y
-      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 9123749012671544582, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
       propertyPath: attackVelocityArray.Array.size

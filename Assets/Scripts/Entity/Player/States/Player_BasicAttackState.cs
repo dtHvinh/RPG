@@ -6,28 +6,28 @@ public class Player_BasicAttackState : PlayerState
 {
     public const string STATE_NAME = "basicAttack";
     public const int FirstComboIndex = 1;
-    public const int SecondComboIndex = 2;
     public const int LastComboIndex = 3;
 
     private float attackVelocityTimer;
     private int comboIndex = 1;
+    private bool attackComboQueued = false;
 
     private float lastTimeAttacked;
 
     public Player_BasicAttackState(EntityStateMachine stateMachine, Player player, string animationBoolName)
         : base(stateMachine, player, animationBoolName)
     {
+        Debug.Assert(player.AttackVelocity.Length == LastComboIndex, "Attack velocity array length must be equal to LastComboIndex");
     }
 
     public override void Enter()
     {
         base.Enter();
-
         ResetComboIfNeed();
-
+        attackComboQueued = false;
         player.Animator.SetInteger(AnimatorConstants.BASIC_ATTACK_INDEX, comboIndex);
-
         ApplyAttackVelocity();
+
     }
 
     private void ResetComboIfNeed()
@@ -36,7 +36,12 @@ public class Player_BasicAttackState : PlayerState
         {
             comboIndex = FirstComboIndex;
         }
-        else if (comboIndex > LastComboIndex)
+    }
+
+    private void IncreaseComboIndex()
+    {
+        comboIndex++;
+        if (comboIndex > LastComboIndex)
         {
             comboIndex = FirstComboIndex;
         }
@@ -49,7 +54,15 @@ public class Player_BasicAttackState : PlayerState
 
         if (triggerCalled)
         {
-            stateMachine.ChangeState(player.IdleState);
+            if(attackComboQueued)
+                stateMachine.ChangeState(player.BasicAttackState);
+            else
+                stateMachine.ChangeState(player.IdleState); 
+        }
+
+        if(player.Inputs.Player.Attack.WasPressedThisFrame())
+        {
+            attackComboQueued = true;
         }
     }
 
@@ -58,7 +71,7 @@ public class Player_BasicAttackState : PlayerState
         base.Exit();
 
         lastTimeAttacked = Time.time;
-        comboIndex++;
+        IncreaseComboIndex();
     }
 
     private void HandleAttackBodyVelocity()
@@ -75,8 +88,9 @@ public class Player_BasicAttackState : PlayerState
     {
         attackVelocityTimer = player.attackVelocityDuration;
 
-        player.SetVelocity(
-            xVelocity: player.attackVelocity.x * player.FacingDirection,
-            yVelocity: player.attackVelocity.y);
+        if (!player.CliffDetected)
+            player.SetVelocity(
+                xVelocity: player.AttackVelocity[comboIndex - 1].x * player.FacingDirection,
+                yVelocity: player.AttackVelocity[comboIndex - 1].y);
     }
 }

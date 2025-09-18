@@ -1,11 +1,17 @@
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : Entity
 {
+    [SerializeField] private Transform cliffCheckPoint;
+
+    private EntityStateMachine stateMachine;
+
     public PlayerInputSet Inputs { get; private set; }
     public Vector2 MoveInput { get; private set; }
 
-    private EntityStateMachine stateMachine;
     public Player_IdleState IdleState { get; private set; }
     public Player_MoveState MoveState { get; private set; }
     public Player_JumpState JumpState { get; private set; }
@@ -22,11 +28,13 @@ public class Player : Entity
     public float DashDuration = 0.2f;
 
     [Header("Collision Detection")]
+    [SerializeField] private float cliffCheckDistance = .5f;
+    [SerializeField] private float wallCheckDistance = 0.43f;
     public bool WallDetected { get; private set; } = false;
-    public float WallCheckDistance = 0.43f;
+    public bool CliffDetected { get; private set; } = true;
 
     [Header("Attack Details")]
-    public Vector2 attackVelocity;
+    public Vector2[] AttackVelocity;
     public float attackVelocityDuration;
     public float comboResetTime = 1f;
 
@@ -46,6 +54,13 @@ public class Player : Entity
         BasicAttackState = new Player_BasicAttackState(stateMachine, this, Player_BasicAttackState.STATE_NAME);
     }
 
+    public override void Start()
+    {
+        base.Start();
+
+        stateMachine.Initialize(IdleState);
+    }
+
     private void OnEnable()
     {
         Inputs.Enable();
@@ -63,8 +78,6 @@ public class Player : Entity
     {
         base.Update();
 
-        Debug.Log(stateMachine.currentState.AnimationBoolName);
-
         stateMachine.ActiveStateUpdate();
     }
 
@@ -72,21 +85,19 @@ public class Player : Entity
     {
         base.HandleCollisionDetection();
 
-        WallDetected = Physics2D.Raycast(transform.position, Vector2.right * FacingDirection, WallCheckDistance, groundLayer);
-    }
-
-    public override void Start()
-    {
-        base.Start();
-
-        stateMachine.Initialize(IdleState);
+        WallDetected = Physics2D.Raycast(transform.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer);
+        CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
     public void CallAnimationTrigger() => stateMachine.currentState.CallAnimationTrigger();
 
-    private void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
+        base.OnDrawGizmos();
+
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + FacingDirection * WallCheckDistance * Vector3.right);
+        Gizmos.DrawLine(transform.position, transform.position + FacingDirection * wallCheckDistance * Vector3.right);
+
+        Gizmos.DrawLine(cliffCheckPoint.position, cliffCheckPoint.position + Vector3.down * cliffCheckDistance);
     }
 }

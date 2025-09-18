@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(EntityStats), typeof(Rigidbody2D), typeof(Collider2D))]
 public class Entity : MonoBehaviour, IDamageable
 {
     public Rigidbody2D Rb { get; private set; }
@@ -12,9 +13,9 @@ public class Entity : MonoBehaviour, IDamageable
     public bool CanJump { get; private set; } = true;
 
     [Header("Collition Details")]
-    private const float groundCheckDistance = 1.5f;
-    public bool GroundDetected { get; private set; } = true;
+    [SerializeField] private float groundCheckDistance = 1.5f;
     [SerializeField] protected LayerMask groundLayer;
+    public bool GroundDetected { get; private set; } = true;
 
     [Header("Attack Details")]
     [SerializeField] protected Transform attackPoint;
@@ -110,7 +111,7 @@ public class Entity : MonoBehaviour, IDamageable
     }
 
     // Testing
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         if (Stats != null && attackPoint != null)
