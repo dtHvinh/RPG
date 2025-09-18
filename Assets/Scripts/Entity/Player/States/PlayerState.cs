@@ -9,6 +9,7 @@ public class PlayerState
     public EntityStats Stats => player.Stats;
     public Vector2 MoveInput => player.MoveInput;
     public PlayerInputSet Inputs => player.Inputs;
+    public Animator Animator => player.Animator;
 
     public string AnimationBoolName { get; private set; }
 

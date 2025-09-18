@@ -1,6 +1,4 @@
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Player : Entity
@@ -8,6 +6,7 @@ public class Player : Entity
     [SerializeField] private Transform cliffCheckPoint;
 
     private EntityStateMachine stateMachine;
+    private Coroutine queuedAttackCoroutine;
 
     public PlayerInputSet Inputs { get; private set; }
     public Vector2 MoveInput { get; private set; }
@@ -89,7 +88,21 @@ public class Player : Entity
         CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
+    private IEnumerator EnterAttackStateWithDelayCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        stateMachine.ChangeState(BasicAttackState);
+    }
+
     public void CallAnimationTrigger() => stateMachine.CurrentState.CallAnimationTrigger();
+
+    public void EnterAttackStateWithDelay()
+    {
+        if(queuedAttackCoroutine != null)
+            StopCoroutine(queuedAttackCoroutine);
+
+        queuedAttackCoroutine = StartCoroutine(EnterAttackStateWithDelayCoroutine());
+    }
 
     protected override void OnDrawGizmos()
     {

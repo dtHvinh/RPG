@@ -11,6 +11,7 @@ public class Player_BasicAttackState : PlayerState
     private float attackVelocityTimer;
     private int comboIndex = 1;
     private bool attackComboQueued = false;
+    private float attackDir;
 
     private float lastTimeAttacked;
 
@@ -47,15 +48,34 @@ public class Player_BasicAttackState : PlayerState
         }
     }
 
+    private void QueueNextAttack()
+    {
+        if (comboIndex < LastComboIndex)
+        {
+            attackComboQueued = true;
+        }
+    }
+
     public override void Update()
     {
         base.Update();
+
         HandleAttackBodyVelocity();
+
+        attackDir = player.MoveInput.x != 0 ? player.MoveInput.x : player.FacingDirection;
+
+        if (Inputs.Player.Attack.WasPressedThisFrame())
+        {
+            QueueNextAttack();
+        }
 
         if (triggerCalled)
         {
-            if(attackComboQueued)
-                stateMachine.ChangeState(player.BasicAttackState);
+            if (attackComboQueued)
+            {
+                Animator.SetBool(AnimationBoolName, false);
+                player.EnterAttackStateWithDelay();
+            }
             else
                 stateMachine.ChangeState(player.IdleState); 
         }
@@ -90,7 +110,7 @@ public class Player_BasicAttackState : PlayerState
 
         if (!player.CliffDetected)
             player.SetVelocity(
-                xVelocity: player.AttackVelocity[comboIndex - 1].x * player.FacingDirection,
+                xVelocity: player.AttackVelocity[comboIndex - 1].x * attackDir,
                 yVelocity: player.AttackVelocity[comboIndex - 1].y);
     }
 }
