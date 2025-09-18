@@ -89,7 +89,7 @@ public class Player : Entity
         CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
-    public void CallAnimationTrigger() => stateMachine.currentState.CallAnimationTrigger();
+    public void CallAnimationTrigger() => stateMachine.CurrentState.CallAnimationTrigger();
 
     protected override void OnDrawGizmos()
     {

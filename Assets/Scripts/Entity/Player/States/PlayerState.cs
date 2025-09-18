@@ -55,7 +55,7 @@ public class PlayerState
         if(player.WallDetected)
             return false;
 
-        if(stateMachine.currentState == player.DashState)
+        if(stateMachine.CurrentState == player.DashState)
             return false;
 
         return true;
