@@ -1,0 +1,26 @@
+public class Player_IdleState : Player_GroundState
+{
+    public const string STATE_NAME = "idle";
+
+    public Player_IdleState(EntityStateMachine stateMachine, Player entity, string animationBoolName)
+        : base(stateMachine, entity, animationBoolName)
+    {
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        player.SetVelocity(0, Rb.linearVelocityY);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (player.CanMove && MoveInput.x != 0)
+        {
+            stateMachine.ChangeState(player.MoveState);
+        }
+    }
+}

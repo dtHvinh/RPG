@@ -21,3 +21,6 @@ MonoBehaviour:
   voidDamage: 0
   earthDamage: 0
   trueDamage: 0
+  moveSpeed: 10
+  jumpForce: 12
+  wallJumpForce: {x: 12, y: 16}

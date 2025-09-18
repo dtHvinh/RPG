@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8700646228401766062}
   - component: {fileID: 3355312204940329523}
   - component: {fileID: 6416508626898656984}
-  - component: {fileID: 3570860767509734186}
   - component: {fileID: 6654661940646166091}
+  - component: {fileID: 1248018462272446222}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -115,18 +115,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3570860767509734186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1019526881237559556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fb9c418f246d3d42b1f20833bba1729, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!114 &6654661940646166091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +130,18 @@ MonoBehaviour:
   entityStats: {fileID: 9025147996089420326}
   onDamageVFXMaterial: {fileID: 2100000, guid: 62a6c3eed110dfa4fb6a3a72fffbea5d, type: 2}
   onDamageVFXDuration: 0.2
+--- !u!114 &1248018462272446222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019526881237559556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8f669be4b85a0449fa7ef9ba9c2771, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player_AnimationTriggers
 --- !u!1 &1098313060187097726
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,8 +240,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.04146996, y: -0.3787099}
-  m_Size: {x: 0.7329399, y: 2.0744796}
+  m_Offset: {x: 0.032944262, y: -0.4248947}
+  m_Size: {x: 0.74524915, y: 1.9821098}
   m_Direction: 0
 --- !u!114 &9123749012671544582
 MonoBehaviour:
@@ -255,8 +255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d29c46231ac8eb147b44ca852604d9bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  moveSpeed: 8
-  jumpForce: 12
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -264,6 +262,10 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
+  JumpAirResistance: 0.8
+  DashSpeed: 20
+  DashDuration: 0.2
+  WallCheckDistance: 0.42
 --- !u!114 &9025147996089420326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,24 +279,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   baseStats: {fileID: 11400000, guid: 3e396dbe72612e24ca4e86798790548b, type: 2}
-  currentHealth:
-    baseValue: 0
-  attackRadius:
-    baseValue: 0
-  physicalDamage:
-    baseValue: 0
-  fireDamage:
-    baseValue: 0
-  iceDamage:
-    baseValue: 0
-  lightningDamage:
-    baseValue: 0
-  voidDamage:
-    baseValue: 0
-  earthDamage:
-    baseValue: 0
-  trueDamage:
-    baseValue: 0
 --- !u!1 &3476628311622750361
 GameObject:
   m_ObjectHideFlags: 0

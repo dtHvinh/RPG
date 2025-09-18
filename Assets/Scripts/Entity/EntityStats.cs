@@ -15,6 +15,9 @@ public class EntityStats : MonoBehaviour
     [SerializeField] private Stat voidDamage;
     [SerializeField] private Stat earthDamage;
     [SerializeField] private Stat trueDamage;
+    [SerializeField] private Stat moveSpeed;
+    [SerializeField] private Stat jumpForce;
+    private Vector2 wallJumpForce;
 
 
     public event EventHandler<DamageTakenEventArgs> OnDamageTaken;
@@ -32,6 +35,11 @@ public class EntityStats : MonoBehaviour
         voidDamage = baseStats.voidDamage;
         earthDamage = baseStats.earthDamage;
         trueDamage = baseStats.trueDamage;
+
+        moveSpeed = baseStats.moveSpeed;
+        jumpForce = baseStats.jumpForce;
+
+        wallJumpForce = baseStats.wallJumpForce;
     }
 
     public float GetCurrentHealth() => currentHealth.Value;
@@ -41,6 +49,12 @@ public class EntityStats : MonoBehaviour
     public float GetAttackRadius() => attackRadius.Value;
 
     public float GetPhysicalDamage() => physicalDamage.Value;
+
+    public float GetMoveSpeed() => moveSpeed.Value;
+
+    public float GetJumpForce() => jumpForce.Value;
+
+    public Vector2 GetWallJumpForce() => wallJumpForce;
 
     public void TakeDamage(DameDealingInfo damage)
     {
@@ -56,18 +70,6 @@ public class EntityStats : MonoBehaviour
     }
 
     public bool IsDead() => currentHealth.Value <= 0;
-
-    [Serializable]
-    public struct Stat
-    {
-        public float baseValue;
-
-        public readonly float Value => baseValue;
-
-        public Stat(float baseValue) => this.baseValue = baseValue;
-
-        public static implicit operator Stat(float value) => new(value);
-    }
 
     public class DamageTakenEventArgs : EventArgs
     {

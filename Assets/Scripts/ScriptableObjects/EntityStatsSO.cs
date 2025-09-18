@@ -17,4 +17,9 @@ public class EntityStatsSO : ScriptableObject
     public float voidDamage;
     public float earthDamage;
     public float trueDamage;
+
+    [Header("Movement stats")]
+    public float moveSpeed = 8f;
+    public float jumpForce = 12f;
+    public Vector2 wallJumpForce;
 }
