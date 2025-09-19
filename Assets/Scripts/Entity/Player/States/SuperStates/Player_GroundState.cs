@@ -15,7 +15,7 @@ public class Player_GroundState : PlayerState
 
         if(Inputs.Player.Attack.WasPerformedThisFrame())
         {
-            stateMachine.ChangeState(player.BasicAttackState);
+            stateMachine.ChangeState(player.BasicAttack1State);
         }
     }
 }

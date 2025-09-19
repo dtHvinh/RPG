@@ -6,7 +6,7 @@ public class Player : Entity
     [SerializeField] private Transform cliffCheckPoint;
 
     private EntityStateMachine stateMachine;
-    private Coroutine queuedAttackCoroutine;
+    private Coroutine queuedAttackCo;
 
     public PlayerInputSet Inputs { get; private set; }
     public Vector2 MoveInput { get; private set; }
@@ -19,7 +19,9 @@ public class Player : Entity
     public Player_WallSlideState WallSlideState { get; private set; }
     public Player_WallJumpState WallJumpState { get; private set; }
     public Player_DashState DashState { get; private set; }
-    public Player_BasicAttackState BasicAttackState { get; private set; }
+    public Player_BasicAttack1State BasicAttack1State { get; private set; }
+    public Player_BasicAttack2State BasicAttack2State { get; private set; }
+    public Player_BasicAttack3State BasicAttack3State { get; private set; }
 
     [Header("Movement Details")]
     public float JumpAirResistance = 0.8f;
@@ -50,7 +52,9 @@ public class Player : Entity
         WallSlideState = new Player_WallSlideState(stateMachine, this, Player_WallSlideState.STATE_NAME);
         WallJumpState = new Player_WallJumpState(stateMachine, this, Player_WallJumpState.STATE_NAME);
         DashState = new Player_DashState(stateMachine, this, Player_DashState.STATE_NAME);
-        BasicAttackState = new Player_BasicAttackState(stateMachine, this, Player_BasicAttackState.STATE_NAME);
+        BasicAttack1State = new Player_BasicAttack1State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
+        BasicAttack2State = new Player_BasicAttack2State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
+        BasicAttack3State = new Player_BasicAttack3State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
     }
 
     public override void Start()
@@ -88,21 +92,20 @@ public class Player : Entity
         CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
-    private IEnumerator EnterAttackStateWithDelayCoroutine()
+    private IEnumerator EnterAttackStateCo(Player_BasicAttackState nextAttackState)
     {
         yield return new WaitForEndOfFrame();
-        stateMachine.ChangeState(BasicAttackState);
+        stateMachine.ChangeState(nextAttackState);
+    }
+
+    public void ChangeAttackState(Player_BasicAttackState nextAttackState)
+    {
+        if (queuedAttackCo != null)
+            StopCoroutine(queuedAttackCo);
+        queuedAttackCo = StartCoroutine(EnterAttackStateCo(nextAttackState));
     }
 
     public void CallAnimationTrigger() => stateMachine.CurrentState.CallAnimationTrigger();
-
-    public void EnterAttackStateWithDelay()
-    {
-        if(queuedAttackCoroutine != null)
-            StopCoroutine(queuedAttackCoroutine);
-
-        queuedAttackCoroutine = StartCoroutine(EnterAttackStateWithDelayCoroutine());
-    }
 
     protected override void OnDrawGizmos()
     {

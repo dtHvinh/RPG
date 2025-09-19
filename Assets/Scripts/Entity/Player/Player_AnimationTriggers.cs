@@ -14,4 +14,9 @@ public class Player_AnimationTriggers : MonoBehaviour
     {
         player.CallAnimationTrigger();
     }
+
+    private void Test()
+    {
+        Debug.Log("This animation start");
+    }
 }
