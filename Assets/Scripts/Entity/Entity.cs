@@ -55,7 +55,8 @@ public class Entity : MonoBehaviour, IDamageable
 
     private void HandleFlip()
     {
-        if (Rb.linearVelocity.x > 0 && FacingDirection == -1 || Rb.linearVelocity.x < 0 && FacingDirection == 1)
+        if (Rb.linearVelocity.x > 0 && FacingDirection == -1 
+            || Rb.linearVelocity.x < 0 && FacingDirection == 1)
         {
             Flip();
         }
@@ -96,7 +97,7 @@ public class Entity : MonoBehaviour, IDamageable
 
         foreach (Collider2D target in colliders)
         {
-            target.GetComponent<Entity>().TakeDamage(dameDealingInfo);
+            target.GetComponent<IDamageable>().TakeDamage(dameDealingInfo);
         }
     }
 

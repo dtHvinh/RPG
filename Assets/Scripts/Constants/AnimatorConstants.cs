@@ -4,4 +4,5 @@ public static class AnimatorConstants
     public const string ATTACK = "attack";
     public const string DEATH = "death";
     public const string BASIC_ATTACK_INDEX = "basicAttackIndex";
+    public const string PLUNGE_ATTACK_TRIGGER = "plungeAttackTrigger";
 }

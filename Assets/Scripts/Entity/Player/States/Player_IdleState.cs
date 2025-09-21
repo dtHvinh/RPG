@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Player_IdleState : Player_GroundState
 {
     public const string STATE_NAME = "idle";
@@ -18,7 +20,12 @@ public class Player_IdleState : Player_GroundState
     {
         base.Update();
 
-        if (player.CanMove && MoveInput.x != 0)
+        if(player.MoveInput.x == player.FacingDirection && player.WallDetected)
+        {
+            return; 
+        }
+
+        if (MoveInput.x != 0)
         {
             stateMachine.ChangeState(player.MoveState);
         }

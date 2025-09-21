@@ -14,5 +14,10 @@ public class Player_AiredState : PlayerState
 
         if (MoveInput.x != 0)
             player.SetVelocity(MoveInput.x * Stats.GetMoveSpeed() * player.JumpAirResistance, Rb.linearVelocityY);
+
+        if(Inputs.Player.Attack.WasPressedThisFrame())
+        {
+            stateMachine.ChangeState(player.PlungeAttackState);
+        }
     }
 }

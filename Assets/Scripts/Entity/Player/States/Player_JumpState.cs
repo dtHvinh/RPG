@@ -18,7 +18,9 @@ public class Player_JumpState : Player_AiredState
     {
         base.Update();
 
-        if (Rb.linearVelocityY <= 0)
+        if (Rb.linearVelocityY <= 0
+            // Avoid transitioning to fall state if we're in the middle of a plunge attack
+            && stateMachine.CurrentState != player.PlungeAttackState)
         {
             stateMachine.ChangeState(player.FallState);
         }

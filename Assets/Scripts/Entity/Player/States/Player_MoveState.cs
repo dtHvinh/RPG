@@ -11,21 +11,18 @@ public class Player_MoveState : Player_GroundState
     {
         base.Update();
 
-        if (player.CanMove)
+        if (player.MoveInput.x == 0 || player.WallDetected)
         {
-            player.SetVelocity(
-                xVelocity: MoveInput.x * Stats.GetMoveSpeed(),
-                yVelocity: Rb.linearVelocity.y);
+            stateMachine.ChangeState(player.IdleState);
+        }
 
-            if (!player.IsHorizontallyMoving())
-            {
-                stateMachine.ChangeState(player.IdleState);
-            }
+        player.SetVelocity(
+            xVelocity: MoveInput.x * Stats.GetMoveSpeed(),
+            yVelocity: Rb.linearVelocity.y);
 
-            if (!player.GroundDetected)
-            {
-                stateMachine.ChangeState(player.FallState);
-            }
+        if (!player.GroundDetected)
+        {
+            stateMachine.ChangeState(player.FallState);
         }
     }
 }

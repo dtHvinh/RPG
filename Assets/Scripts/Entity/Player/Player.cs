@@ -22,6 +22,7 @@ public class Player : Entity
     public Player_BasicAttack1State BasicAttack1State { get; private set; }
     public Player_BasicAttack2State BasicAttack2State { get; private set; }
     public Player_BasicAttack3State BasicAttack3State { get; private set; }
+    public Player_PlungeAttackState PlungeAttackState { get; private set; }
 
     [Header("Movement Details")]
     public float JumpAirResistance = 0.8f;
@@ -29,6 +30,8 @@ public class Player : Entity
     public float DashDuration = 0.2f;
 
     [Header("Collision Detection")]
+    [SerializeField] private Transform primaryWallCheck;
+    [SerializeField] private Transform secondaryWallCheck;
     [SerializeField] private float cliffCheckDistance = .5f;
     [SerializeField] private float wallCheckDistance = 0.43f;
     public bool WallDetected { get; private set; } = false;
@@ -36,6 +39,7 @@ public class Player : Entity
 
     [Header("Attack Details")]
     public Vector2[] AttackVelocity;
+    public Vector2 PlungeAttackVelocity;
     public float attackVelocityDuration;
     public float comboResetTime = 1f;
 
@@ -55,6 +59,7 @@ public class Player : Entity
         BasicAttack1State = new Player_BasicAttack1State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
         BasicAttack2State = new Player_BasicAttack2State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
         BasicAttack3State = new Player_BasicAttack3State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
+        PlungeAttackState = new Player_PlungeAttackState(stateMachine, this, Player_PlungeAttackState.STATE_NAME);
     }
 
     public override void Start()
@@ -88,7 +93,9 @@ public class Player : Entity
     {
         base.HandleCollisionDetection();
 
-        WallDetected = Physics2D.Raycast(transform.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer);
+        WallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer)
+            && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer);
+
         CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
@@ -112,8 +119,10 @@ public class Player : Entity
         base.OnDrawGizmos();
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + FacingDirection * wallCheckDistance * Vector3.right);
+        Gizmos.DrawLine(primaryWallCheck.position, primaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
+        Gizmos.DrawLine(secondaryWallCheck.position, secondaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
 
+        Gizmos.color = Color.blue;
         Gizmos.DrawLine(cliffCheckPoint.position, cliffCheckPoint.position + Vector3.down * cliffCheckDistance);
     }
 }

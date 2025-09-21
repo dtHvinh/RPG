@@ -20,6 +20,8 @@ public class Player_BasicAttackState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
+        attackDir = player.FacingDirection;
     }
 
     public override void Update()
