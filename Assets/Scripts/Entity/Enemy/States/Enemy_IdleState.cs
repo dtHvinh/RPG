@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy_IdleState : EnemyState
 {
-    public Enemy_IdleState(EntityStateMachine stateMachine, Enemy entity, string animationBoolName) 
+    public Enemy_IdleState(EntityStateMachine stateMachine, Enemy entity, string animationBoolName)
         : base(stateMachine, entity, animationBoolName)
     {
     }
@@ -11,6 +11,8 @@ public class Enemy_IdleState : EnemyState
     {
         base.Enter();
 
+        stateTimer = enemy.IdleTime;
+
         enemy.SetVelocity(0f, Rb.linearVelocityY);
     }
 
@@ -18,9 +20,13 @@ public class Enemy_IdleState : EnemyState
     {
         base.Update();
 
-        if(!enemy.WallDetected)
+        if (enemy.CanMove())
         {
             stateMachine.ChangeState(enemy.MoveState);
+        }
+        else if (stateTimer <= 0f)
+        {
+            enemy.Flip();
         }
     }
 }

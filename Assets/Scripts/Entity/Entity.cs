@@ -62,18 +62,32 @@ public abstract class Entity : MonoBehaviour
     {
         HandleCollisionDetection();
         HandleFlip();
-        
+
         stateMachine.ActiveStateUpdate();
     }
+
+    public void MoveWithBaseSpeed(float direction)
+    {
+        SetVelocity(Stats.GetMoveSpeed() * Mathf.Sign(direction), Rb.linearVelocityY);
+    }
+
+    public void MoveWithBaseSpeed()
+    {
+        SetVelocity(Stats.GetMoveSpeed() * FacingDirection, Rb.linearVelocityY);
+    }
+
+    public bool IsHorizontallyMoving() => Rb.linearVelocity.x != 0;
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
         Rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
 
+    public virtual bool CanMove() => !WallDetected && !CliffDetected;
+
     private void HandleFlip()
     {
-        if (Rb.linearVelocity.x > 0 && FacingDirection == -1 
+        if (Rb.linearVelocity.x > 0 && FacingDirection == -1
             || Rb.linearVelocity.x < 0 && FacingDirection == 1)
         {
             Flip();
@@ -92,7 +106,9 @@ public abstract class Entity : MonoBehaviour
         GroundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
 
         WallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer)
-            && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer);
+            && secondaryWallCheck != null ?
+                Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer)
+                : true;
 
         CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
@@ -109,7 +125,8 @@ public abstract class Entity : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawLine(primaryWallCheck.position, primaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
-        Gizmos.DrawLine(secondaryWallCheck.position, secondaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
+        if (secondaryWallCheck != null)
+            Gizmos.DrawLine(secondaryWallCheck.position, secondaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
 
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(cliffCheckPoint.position, cliffCheckPoint.position + Vector3.down * cliffCheckDistance);

@@ -11,16 +11,13 @@ public class Enemy_MoveState : EnemyState
     {
         base.Update();
 
-        if (CanMove())
+        if (enemy.CanMove())
         {
             enemy.MoveWithBaseSpeed();
         }
         else
         {
-            enemy.Flip();
             stateMachine.ChangeState(enemy.IdleState);
         }
     }
-
-    private bool CanMove() => !enemy.WallDetected && !enemy.CliffDetected;
 }

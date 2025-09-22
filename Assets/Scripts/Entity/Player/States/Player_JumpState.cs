@@ -18,6 +18,12 @@ public class Player_JumpState : Player_AiredState
     {
         base.Update();
 
+        if (player.WallDetected)
+        {
+            stateMachine.ChangeState(player.WallSlideState);
+            return;
+        }
+
         if (Rb.linearVelocityY <= 0
             // Avoid transitioning to fall state if we're in the middle of a plunge attack
             && stateMachine.CurrentState != player.PlungeAttackState)
