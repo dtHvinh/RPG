@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EntityStateMachine
 {
-    public PlayerState CurrentState { get; private set; } 
+    public EntityState CurrentState { get; private set; } 
 
     public void Initialize(PlayerState startingState)
     {

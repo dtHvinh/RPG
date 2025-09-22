@@ -13,6 +13,8 @@ public class Player_IdleState : Player_GroundState
     {
         base.Enter();
 
+        Debug.Assert(player != null, "Player is null");
+
         player.SetVelocity(0, Rb.linearVelocityY);
     }
 

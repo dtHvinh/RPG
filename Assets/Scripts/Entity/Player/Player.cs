@@ -5,7 +5,6 @@ public class Player : Entity
 {
     [SerializeField] private Transform cliffCheckPoint;
 
-    private EntityStateMachine stateMachine;
     private Coroutine queuedAttackCo;
 
     public PlayerInputSet Inputs { get; private set; }
@@ -43,9 +42,16 @@ public class Player : Entity
     public float attackVelocityDuration;
     public float comboResetTime = 1f;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         Inputs = new PlayerInputSet();
+    }
+
+    public override void Start()
+    {
+        base.Start();
 
         stateMachine = new EntityStateMachine();
 
@@ -60,11 +66,6 @@ public class Player : Entity
         BasicAttack2State = new Player_BasicAttack2State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
         BasicAttack3State = new Player_BasicAttack3State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
         PlungeAttackState = new Player_PlungeAttackState(stateMachine, this, Player_PlungeAttackState.STATE_NAME);
-    }
-
-    public override void Start()
-    {
-        base.Start();
 
         stateMachine.Initialize(IdleState);
     }

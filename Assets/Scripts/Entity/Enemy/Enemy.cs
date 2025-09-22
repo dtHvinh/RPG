@@ -8,15 +8,6 @@ public class Enemy : Entity
     {
         HandleMovement();
         HandleCollisionDetection();
-        HandleAttack();
-    }
-
-    protected void HandleAttack()
-    {
-        if (isTargetInSight)
-        {
-            Animator.SetTrigger(AnimatorConstants.ATTACK);
-        }
     }
 
     protected override void HandleCollisionDetection()
@@ -28,13 +19,8 @@ public class Enemy : Entity
 
     protected void HandleMovement()
     {
-        if (CanMove)
-            SetVelocity(
-                xVelocity: FacingDirection * Stats.GetMoveSpeed(),
-                yVelocity: Rb.linearVelocity.y);
-        else
-            SetVelocity(
-                xVelocity: 0,
-                yVelocity: Rb.linearVelocity.y);
+        SetVelocity(
+            xVelocity: FacingDirection * Stats.GetMoveSpeed(),
+            yVelocity: Rb.linearVelocity.y);
     }
 }

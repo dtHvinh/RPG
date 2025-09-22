@@ -11,24 +11,17 @@ public class EntityAnimationEvents : MonoBehaviour
 
     public void OnAttackStarted()
     {
-        Entity.SetCanMove(false);
-        Entity.SetCanJump(false);
     }
 
     public void OnAttackEnded()
     {
-        Entity.SetCanMove(true);
-        Entity.SetCanJump(true);
     }
 
     public void OnDamageTarget()
     {
-        Entity.DamageTargets();
     }
 
     public void OnDeath()
     {
-        Entity.SetCanJump(false);
-        Entity.SetCanMove(false);
     }
 }
