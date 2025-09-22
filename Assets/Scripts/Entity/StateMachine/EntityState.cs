@@ -9,7 +9,7 @@ public abstract class EntityState
     protected EntityStats Stats;
     protected Animator Animator;
 
-    protected string AnimationBoolName;
+    public string AnimationBoolName { get; protected set; }
 
     protected float stateTimer;
     protected bool triggerCalled;

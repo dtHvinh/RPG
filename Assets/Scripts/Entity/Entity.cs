@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(EntityStats), typeof(Rigidbody2D), typeof(Collider2D))]
-public class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour
 {
     protected EntityStateMachine stateMachine;
 
@@ -21,6 +21,15 @@ public class Entity : MonoBehaviour
     [SerializeField] protected Transform attackPoint;
     [SerializeField] protected LayerMask targetLayers;
 
+    [Header("Collision Detection")]
+    [SerializeField] protected Transform primaryWallCheck;
+    [SerializeField] protected Transform secondaryWallCheck;
+    [SerializeField] private Transform cliffCheckPoint;
+    [SerializeField] protected float cliffCheckDistance = .5f;
+    [SerializeField] protected float wallCheckDistance = 0.43f;
+    public bool WallDetected { get; protected set; } = false;
+    public bool CliffDetected { get; protected set; } = false;
+
     public EntityStats Stats { get; private set; }
 
     public virtual void Awake()
@@ -33,21 +42,34 @@ public class Entity : MonoBehaviour
 
     public virtual void Start()
     {
+        stateMachine = new EntityStateMachine();
 
+        InitializeStates();
+        SetInitialState();
     }
+
+    /// <summary>
+    /// Initializes the set of states required for the implementing FSM correctly.   
+    /// </summary>
+    public abstract void InitializeStates();
+
+    /// <summary>
+    /// Sets the initial state of the FSM.
+    /// </summary>
+    public abstract void SetInitialState();
 
     protected virtual void Update()
     {
         HandleCollisionDetection();
         HandleFlip();
+        
+        stateMachine.ActiveStateUpdate();
     }
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
         Rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
-
-    public bool IsHorizontallyMoving() => Rb.linearVelocity.x != 0;
 
     private void HandleFlip()
     {
@@ -68,6 +90,11 @@ public class Entity : MonoBehaviour
     protected virtual void HandleCollisionDetection()
     {
         GroundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+
+        WallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer)
+            && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer);
+
+        CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
     // Testing
@@ -79,5 +106,12 @@ public class Entity : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(primaryWallCheck.position, primaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
+        Gizmos.DrawLine(secondaryWallCheck.position, secondaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(cliffCheckPoint.position, cliffCheckPoint.position + Vector3.down * cliffCheckDistance);
     }
 }

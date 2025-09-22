@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Player : Entity
 {
-    [SerializeField] private Transform cliffCheckPoint;
-
     private Coroutine queuedAttackCo;
 
     public PlayerInputSet Inputs { get; private set; }
@@ -28,14 +26,6 @@ public class Player : Entity
     public float DashSpeed = 20f;
     public float DashDuration = 0.2f;
 
-    [Header("Collision Detection")]
-    [SerializeField] private Transform primaryWallCheck;
-    [SerializeField] private Transform secondaryWallCheck;
-    [SerializeField] private float cliffCheckDistance = .5f;
-    [SerializeField] private float wallCheckDistance = 0.43f;
-    public bool WallDetected { get; private set; } = false;
-    public bool CliffDetected { get; private set; } = true;
-
     [Header("Attack Details")]
     public Vector2[] AttackVelocity;
     public Vector2 PlungeAttackVelocity;
@@ -49,12 +39,8 @@ public class Player : Entity
         Inputs = new PlayerInputSet();
     }
 
-    public override void Start()
+    public override void InitializeStates()
     {
-        base.Start();
-
-        stateMachine = new EntityStateMachine();
-
         IdleState = new Player_IdleState(stateMachine, this, Player_IdleState.STATE_NAME);
         MoveState = new Player_MoveState(stateMachine, this, Player_MoveState.STATE_NAME);
         JumpState = new Player_JumpState(stateMachine, this, Player_JumpState.STATE_NAME);
@@ -66,7 +52,10 @@ public class Player : Entity
         BasicAttack2State = new Player_BasicAttack2State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
         BasicAttack3State = new Player_BasicAttack3State(stateMachine, this, Player_BasicAttackState.STATE_NAME);
         PlungeAttackState = new Player_PlungeAttackState(stateMachine, this, Player_PlungeAttackState.STATE_NAME);
+    }
 
+    public override void SetInitialState()
+    {
         stateMachine.Initialize(IdleState);
     }
 
@@ -86,18 +75,6 @@ public class Player : Entity
     protected override void Update()
     {
         base.Update();
-
-        stateMachine.ActiveStateUpdate();
-    }
-
-    protected override void HandleCollisionDetection()
-    {
-        base.HandleCollisionDetection();
-
-        WallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer)
-            && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, groundLayer);
-
-        CliffDetected = !Physics2D.Raycast(cliffCheckPoint.position, Vector2.down, cliffCheckDistance, groundLayer);
     }
 
     private IEnumerator EnterAttackStateCo(Player_BasicAttackState nextAttackState)
@@ -114,16 +91,4 @@ public class Player : Entity
     }
 
     public void CallAnimationTrigger() => stateMachine.CurrentState.CallAnimationTrigger();
-
-    protected override void OnDrawGizmos()
-    {
-        base.OnDrawGizmos();
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(primaryWallCheck.position, primaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
-        Gizmos.DrawLine(secondaryWallCheck.position, secondaryWallCheck.position + FacingDirection * wallCheckDistance * Vector3.right);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(cliffCheckPoint.position, cliffCheckPoint.position + Vector3.down * cliffCheckDistance);
-    }
 }
