@@ -14,13 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EntityStatsSO
   maxHealth: 200
   attackRadius: 0.75
-  physicalDamage: 50
-  fireDamage: 0
-  iceDamage: 0
-  lightningDamage: 0
-  voidDamage: 0
-  earthDamage: 0
-  trueDamage: 0
-  moveSpeed: 4
+  moveSpeed: 2
   jumpForce: 12
   wallJumpForce: {x: 0, y: 0}
+  damageStats:
+    keys: 00000000
+    values:
+    - 0

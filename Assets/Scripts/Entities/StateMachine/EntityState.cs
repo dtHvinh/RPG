@@ -1,0 +1,56 @@
+using UnityEngine;
+
+public abstract class EntityState
+{
+    protected EntityBase entity;
+    protected EntityStateMachine stateMachine;
+
+    protected Rigidbody2D Rb;
+    protected EntityStats Stats;
+    protected Animator Animator;
+
+    public string AnimationBoolName { get; protected set; }
+
+    protected float stateTimer;
+    protected bool triggerCalled;
+
+    protected EntityState(EntityStateMachine stateMachine, EntityBase entity, string animationBoolName)
+    {
+        this.entity = entity;
+
+        this.stateMachine = stateMachine;
+        AnimationBoolName = animationBoolName;
+
+        Rb = entity.Rb;
+        Stats = entity.Stats;
+        Animator = entity.Animator;
+    }
+
+    public virtual void Enter()
+    {
+        Animator.SetBool(AnimationBoolName, true);
+        triggerCalled = false;
+    }
+
+    public virtual void Update()
+    {
+        stateTimer -= Time.deltaTime;
+
+        UpdateAnimationParameters();
+    }
+
+    public virtual void Exit()
+    {
+        Animator.SetBool(AnimationBoolName, false);
+    }
+
+    public void CurrentStateAnimationTrigger()
+    {
+        triggerCalled = true;
+    }
+
+    public virtual void UpdateAnimationParameters()
+    {
+
+    }
+}
