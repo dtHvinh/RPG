@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-public class Player_DashState : PlayerState
+﻿public class Player_DashState : PlayerState
 {
     public const string STATE_NAME = "dash";
     private float originalGravity;
@@ -29,7 +26,7 @@ public class Player_DashState : PlayerState
 
         if (stateTimer < 0)
         {
-            if (player.GroundDetected)
+            if (player.Collision.GroundDetected)
                 stateMachine.ChangeState(player.IdleState);
             else
                 stateMachine.ChangeState(player.FallState);

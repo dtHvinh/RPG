@@ -22,9 +22,9 @@ public class Player_IdleState : Player_GroundState
     {
         base.Update();
 
-        if(player.MoveInput.x == player.FacingDirection && player.WallDetected)
+        if (player.MoveInput.x == player.FacingDirection && player.Collision.WallDetected)
         {
-            return; 
+            return;
         }
 
         if (MoveInput.x != 0)

@@ -1,6 +1,6 @@
 public class Enemy_GroundState : EnemyState
 {
-    public Enemy_GroundState(EntityStateMachine stateMachine, EnemyBase entity, string animationBoolName)
+    public Enemy_GroundState(EntityStateMachine stateMachine, Enemy entity, string animationBoolName)
         : base(stateMachine, entity, animationBoolName)
     {
     }

@@ -1,9 +1,6 @@
-using Unity.VisualScripting;
-using UnityEngine;
-
 public class EntityStateMachine
 {
-    public EntityState CurrentState { get; private set; } 
+    public EntityState CurrentState { get; private set; }
 
     public void Initialize(EntityState startingState)
     {

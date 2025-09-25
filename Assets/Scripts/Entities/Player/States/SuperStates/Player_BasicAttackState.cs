@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player_BasicAttackState : PlayerState
 {
@@ -9,7 +7,7 @@ public class Player_BasicAttackState : PlayerState
 
     private float attackVelocityTimer;
     private float attackDir;
-   
+
     private Player_BasicAttackState nextAttackState;
 
     public Player_BasicAttackState(EntityStateMachine stateMachine, Player player, string animationBoolName)
@@ -30,12 +28,12 @@ public class Player_BasicAttackState : PlayerState
         HandleAttackBodyVelocity();
         HandleUpdateAttackDirection();
 
-        if(player.FacingDirection != attackDir)
-            player.Flip();
+        if (player.FacingDirection != attackDir)
+            player.Movement.Flip();
 
         if (triggerCalled)
         {
-            if(nextAttackState != null)
+            if (nextAttackState != null)
             {
                 Animator.SetBool(AnimationBoolName, false);
                 player.ChangeAttackState(nextAttackState);
@@ -56,7 +54,7 @@ public class Player_BasicAttackState : PlayerState
     {
         attackVelocityTimer = player.attackVelocityDuration;
 
-        if (!player.CliffDetected)
+        if (!player.Collision.CliffDetected)
             player.SetVelocity(
                 xVelocity: attackVelocity.x * attackDir,
                 yVelocity: attackVelocity.y);

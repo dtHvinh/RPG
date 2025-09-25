@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : EntityBase
+public class Player : Entity
 {
     private Coroutine queuedAttackCo;
 

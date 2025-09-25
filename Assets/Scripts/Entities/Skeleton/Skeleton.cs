@@ -1,4 +1,4 @@
-public class Skeleton : EnemyBase
+public class Skeleton : Enemy
 {
     public override void Awake()
     {

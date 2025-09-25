@@ -1,7 +1,7 @@
 public class Enemy_IdleState : Enemy_GroundState
 {
-    public Enemy_IdleState(EntityStateMachine stateMachine, EnemyBase entity, string animationBoolName)
-        : base(stateMachine, entity, animationBoolName)
+    public Enemy_IdleState(EntityStateMachine stateMachine, Enemy enemy, string animationBoolName)
+        : base(stateMachine, enemy, animationBoolName)
     {
     }
 
@@ -18,13 +18,13 @@ public class Enemy_IdleState : Enemy_GroundState
     {
         base.Update();
 
-        if (enemy.CanMove())
+        if (!enemy.Collision.WallDetected && !enemy.Collision.CliffDetected)
         {
             stateMachine.ChangeState(enemy.MoveState);
         }
         else if (stateTimer <= 0f)
         {
-            enemy.Flip();
+            enemy.Movement.Flip();
         }
     }
 }

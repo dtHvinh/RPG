@@ -1,4 +1,3 @@
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class Player_PlungeAttackState : PlayerState
@@ -7,7 +6,7 @@ public class Player_PlungeAttackState : PlayerState
 
     private bool isPlungeTouchGround; // One-time trigger when plunge attack touches the ground
 
-    public Player_PlungeAttackState(EntityStateMachine stateMachine, Player player, string animationBoolName) 
+    public Player_PlungeAttackState(EntityStateMachine stateMachine, Player player, string animationBoolName)
         : base(stateMachine, player, animationBoolName)
     {
     }
@@ -25,12 +24,12 @@ public class Player_PlungeAttackState : PlayerState
     {
         base.Update();
 
-        if (triggerCalled && player.GroundDetected)
+        if (triggerCalled && player.Collision.GroundDetected)
         {
             stateMachine.ChangeState(player.IdleState);
         }
 
-        if (player.GroundDetected && !isPlungeTouchGround)
+        if (player.Collision.GroundDetected && !isPlungeTouchGround)
         {
             player.OnlyMoveY();
             isPlungeTouchGround = true;

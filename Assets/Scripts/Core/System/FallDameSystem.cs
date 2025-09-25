@@ -1,33 +1,25 @@
 using UnityEngine;
 
-[RequireComponent(typeof(EntityBase))]
+[RequireComponent(typeof(Entity))]
 public class FallDameSystem : MonoBehaviour
 {
-    private EntityBase entity;
+    private Entity entity;
 
-    [ReadOnly] public float fallTime;
-    [SerializeField] private float dameFactor = 5f;
     [SerializeField] private float safeFallHeight = 3f;
 
-    public FallDameSystem(EntityBase entity)
+    public FallDameSystem(Entity entity)
     {
         this.entity = entity;
     }
 
     private void Awake()
     {
-        entity = GetComponent<EntityBase>();
+        entity = GetComponent<Entity>();
     }
 
-    private void Update()
+    public bool CheckSafeFall(Transform checkPoint)
     {
-        if (entity.Rb.linearVelocityY < 0)
-        {
-            fallTime += Time.deltaTime;
-        }
-        else
-        {
-            fallTime = 0;
-        }
+        RaycastHit2D hit = Physics2D.Raycast(checkPoint.position, Vector2.down, safeFallHeight, entity.Collision.GroundLayer);
+        return hit.collider != null;
     }
 }

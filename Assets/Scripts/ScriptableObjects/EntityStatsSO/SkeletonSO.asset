@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff611f295db962a4e8b8f6e80b778dc0, type: 3}
   m_Name: SkeletonSO
   m_EditorClassIdentifier: Assembly-CSharp::EntityStatsSO
+  attackRadius: 1
   maxHealth: 200
-  attackRadius: 0.75
   moveSpeed: 2
   jumpForce: 12
   wallJumpForce: {x: 0, y: 0}
   damageStats:
     keys: 00000000
     values:
-    - 0
+    - 12

@@ -24,8 +24,8 @@ public class DamageDictionaryDrawer : PropertyDrawer
                 Rect line = EditorGUILayout.GetControlRect();
                 float half = line.width * 0.4f;
 
-                Rect left = new Rect(line.x, line.y, half - 5, line.height);
-                Rect right = new Rect(line.x + half, line.y, line.width - half, line.height);
+                Rect left = new(line.x, line.y, half - 5, line.height);
+                Rect right = new(line.x + half, line.y, line.width - half, line.height);
 
                 EditorGUI.PropertyField(left, keyProp, GUIContent.none);
                 EditorGUI.PropertyField(right, valueProp, GUIContent.none);

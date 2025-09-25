@@ -1,7 +1,7 @@
 public class Enemy_MoveState : Enemy_GroundState
 {
-    public Enemy_MoveState(EntityStateMachine stateMachine, EnemyBase entity, string animationBoolName)
-        : base(stateMachine, entity, animationBoolName)
+    public Enemy_MoveState(EntityStateMachine stateMachine, Enemy enemy, string animationBoolName)
+        : base(stateMachine, enemy, animationBoolName)
     {
     }
 
@@ -9,9 +9,9 @@ public class Enemy_MoveState : Enemy_GroundState
     {
         base.Update();
 
-        if (enemy.CanMove())
+        if (!enemy.Collision.WallDetected && !enemy.Collision.CliffDetected)
         {
-            enemy.MoveWithBaseSpeed();
+            enemy.Movement.MoveWithBaseSpeed();
         }
         else
         {

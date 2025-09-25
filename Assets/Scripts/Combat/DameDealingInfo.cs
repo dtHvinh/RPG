@@ -1,13 +1,8 @@
+using UnityEngine;
+
 [System.Serializable]
-public struct DameDealingInfo
+public class DameDealingInfo
 {
-    public float physicalDamage;
-
-    public float fireDamage;
-    public float iceDamage;
-    public float lightningDamage;
-    public float voidDamage;
-    public float earthDamage;
-
-    public float trueDamage;
+    public float damage;
+    public Transform dameDealer;
 }

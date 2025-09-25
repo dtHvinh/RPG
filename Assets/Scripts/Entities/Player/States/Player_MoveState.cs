@@ -11,16 +11,16 @@ public class Player_MoveState : Player_GroundState
     {
         base.Update();
 
-        if (player.MoveInput.x == 0 || player.WallDetected)
+        if (player.MoveInput.x == 0 || player.Collision.WallDetected)
         {
             stateMachine.ChangeState(player.IdleState);
         }
 
         player.SetVelocity(
-            xVelocity: MoveInput.x * Stats.MoveSpeed,
+            xVelocity: MoveInput.x * player.Stats.MoveSpeed,
             yVelocity: Rb.linearVelocity.y);
 
-        if (!player.GroundDetected)
+        if (!player.Collision.GroundDetected)
         {
             stateMachine.ChangeState(player.FallState);
         }

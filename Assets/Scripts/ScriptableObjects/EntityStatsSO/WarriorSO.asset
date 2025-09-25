@@ -12,15 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff611f295db962a4e8b8f6e80b778dc0, type: 3}
   m_Name: WarriorSO
   m_EditorClassIdentifier: Assembly-CSharp::EntityStatsSO
+  attackRadius: 1
   maxHealth: 100
-  attackRadius: 0.75
-  physicalDamage: 20
-  fireDamage: 0
-  iceDamage: 0
-  lightningDamage: 0
-  voidDamage: 0
-  earthDamage: 0
-  trueDamage: 0
   moveSpeed: 10
   jumpForce: 12
   wallJumpForce: {x: 12, y: 16}
+  damageStats:
+    keys: 01000000
+    values:
+    - 15

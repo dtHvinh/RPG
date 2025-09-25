@@ -2,11 +2,10 @@ using UnityEngine;
 
 public abstract class EntityState
 {
-    protected EntityBase entity;
+    protected IEntity entity;
     protected EntityStateMachine stateMachine;
 
     protected Rigidbody2D Rb;
-    protected EntityStats Stats;
     protected Animator Animator;
 
     public string AnimationBoolName { get; protected set; }
@@ -14,7 +13,7 @@ public abstract class EntityState
     protected float stateTimer;
     protected bool triggerCalled;
 
-    protected EntityState(EntityStateMachine stateMachine, EntityBase entity, string animationBoolName)
+    protected EntityState(EntityStateMachine stateMachine, IEntity entity, string animationBoolName)
     {
         this.entity = entity;
 
@@ -22,7 +21,6 @@ public abstract class EntityState
         AnimationBoolName = animationBoolName;
 
         Rb = entity.Rb;
-        Stats = entity.Stats;
         Animator = entity.Animator;
     }
 
@@ -51,6 +49,5 @@ public abstract class EntityState
 
     public virtual void UpdateAnimationParameters()
     {
-
     }
 }

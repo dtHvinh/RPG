@@ -1,17 +1,21 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EntityAnimationTriggers : MonoBehaviour
 {
-    private EntityBase entity;
+    private Entity entity;
 
     private void Start()
     {
-        entity = GetComponentInParent<EntityBase>();
+        entity = GetComponentInParent<Entity>();
     }
 
     private void CurrentStateTrigger()
     {
         entity.CurrentStateAnimationTrigger();
+    }
+
+    private void AttackTrigger()
+    {
+        entity.Combat.PerformAttack();
     }
 }

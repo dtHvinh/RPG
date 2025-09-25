@@ -1,19 +1,24 @@
 ﻿public class EnemyAI
 {
-    private readonly EnemyBase enemy;
+    private readonly Enemy enemy;
 
-    public EnemyAI(EnemyBase enemy)
+    public EnemyAI(Enemy enemy)
     {
         this.enemy = enemy;
     }
 
     public bool ShouldKeepChasingTarget()
     {
-        return !enemy.WallDetected && !enemy.CliffDetected;
+        return enemy.FallDameSystem.CheckSafeFall(enemy.Collision.CliffCheckPoint);
     }
 
     public bool ShouldStartChasingTarget()
     {
-        return !enemy.CliffDetected;
+        if (enemy.Collision.CliffDetected)
+        {
+            return enemy.FallDameSystem.CheckSafeFall(enemy.Collision.CliffCheckPoint);
+        }
+
+        return true;
     }
 }

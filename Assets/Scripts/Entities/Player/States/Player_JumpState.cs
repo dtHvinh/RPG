@@ -11,14 +11,14 @@ public class Player_JumpState : Player_AiredState
     {
         base.Enter();
 
-        player.SetVelocity(Rb.linearVelocityX * player.JumpAirResistance, Stats.JumpForce);
+        player.SetVelocity(Rb.linearVelocityX * player.JumpAirResistance, player.Stats.JumpForce);
     }
 
     public override void Update()
     {
         base.Update();
 
-        if (player.WallDetected)
+        if (player.Collision.WallDetected)
         {
             stateMachine.ChangeState(player.WallSlideState);
             return;

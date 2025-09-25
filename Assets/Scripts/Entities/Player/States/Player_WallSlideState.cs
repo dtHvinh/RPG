@@ -13,16 +13,16 @@ public class Player_WallSlideState : PlayerState
 
         HandleWallSlideMovement();
 
-        if (player.WallDetected == false)
+        if (player.Collision.WallDetected == false)
         {
             stateMachine.ChangeState(player.FallState);
             return;
         }
 
-        if (player.GroundDetected)
+        if (player.Collision.GroundDetected)
         {
             stateMachine.ChangeState(player.IdleState);
-            player.Flip();
+            player.Movement.Flip();
         }
 
         if (Inputs.Player.Jump.WasPressedThisFrame())

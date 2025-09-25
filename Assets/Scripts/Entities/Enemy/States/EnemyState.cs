@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class EnemyState : EntityState
 {
-    protected EnemyBase enemy;
+    protected Enemy enemy;
 
-    public EnemyState(EntityStateMachine stateMachine, EnemyBase entity, string animationBoolName)
-        : base(stateMachine, entity, animationBoolName)
+    public EnemyState(EntityStateMachine stateMachine, Enemy enemy, string animationBoolName)
+        : base(stateMachine, enemy, animationBoolName)
     {
-        enemy = entity;
+        this.enemy = enemy;
     }
 
     public override void UpdateAnimationParameters()

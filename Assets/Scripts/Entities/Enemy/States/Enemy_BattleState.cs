@@ -1,11 +1,7 @@
-﻿using UnityEngine;
-
-public class Enemy_BattleState : EnemyState
+﻿public class Enemy_BattleState : EnemyState
 {
-    public Transform target;
-
-    public Enemy_BattleState(EntityStateMachine stateMachine, EnemyBase entity, string animationBoolName)
-        : base(stateMachine, entity, animationBoolName)
+    public Enemy_BattleState(EntityStateMachine stateMachine, Enemy enemy, string animationBoolName)
+        : base(stateMachine, enemy, animationBoolName)
     {
     }
 
@@ -13,34 +9,37 @@ public class Enemy_BattleState : EnemyState
     {
         base.Enter();
 
-        enemy.Stats.MoveSpeed.AddPercentModifier(.5f);
+        enemy.Stats.MoveSpeed.AddPercentModifier(enemy.BattleAnimSpeedMulti);
+
+        enemy.Combat.SetTarget(enemy.DetectTarget().transform);
     }
 
     public override void Update()
     {
         base.Update();
 
-        target = enemy.DetectTarget().transform;
-
-        if (target != null)
+        if (enemy.Combat.GetTarget() == null)
         {
-            if (enemy.WithinAttackDistance(target))
-            {
-                stateMachine.ChangeState(enemy.AttackState);
-            }
-            else
-            {
-                if (enemy.AI.ShouldKeepChasingTarget())
-                    enemy.SetVelocity(
-                        enemy.Stats.MoveSpeed * DirectionToTarget(),
-                        enemy.Rb.linearVelocityY);
-                else
-                    stateMachine.ChangeState(enemy.IdleState);
-            }
+            stateMachine.ChangeState(enemy.IdleState);
+            return;
+        }
+
+        if (enemy.Combat.WithinAttackDistance())
+        {
+            enemy.Combat.FacingToTarget();
+            stateMachine.ChangeState(enemy.AttackState);
         }
         else
         {
-            stateMachine.ChangeState(enemy.IdleState);
+            if (enemy.AI.ShouldKeepChasingTarget())
+                enemy.SetVelocity(
+                    enemy.Stats.MoveSpeed * enemy.Combat.DirectionToTarget(),
+                    enemy.Rb.linearVelocityY);
+            else
+            {
+                enemy.Combat.ClearTarget();
+                stateMachine.ChangeState(enemy.IdleState);
+            }
         }
     }
 
@@ -50,6 +49,4 @@ public class Enemy_BattleState : EnemyState
 
         enemy.Stats.MoveSpeed.ClearModifiers();
     }
-
-    private float DirectionToTarget() => Mathf.Sign(target.position.x - enemy.transform.position.x);
 }

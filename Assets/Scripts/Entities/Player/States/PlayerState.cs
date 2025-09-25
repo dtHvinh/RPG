@@ -25,7 +25,7 @@ public class PlayerState : EntityState
 
     private bool CanDash()
     {
-        if (player.WallDetected)
+        if (player.Collision.WallDetected)
             return false;
 
         if (stateMachine.CurrentState == player.DashState)

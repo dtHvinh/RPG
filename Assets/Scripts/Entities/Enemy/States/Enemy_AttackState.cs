@@ -1,14 +1,14 @@
 public class Enemy_AttackState : EnemyState
 {
-    public Enemy_AttackState(EntityStateMachine stateMachine, EnemyBase entity, string animationBoolName)
-        : base(stateMachine, entity, animationBoolName)
+    public Enemy_AttackState(EntityStateMachine stateMachine, Enemy enemy, string animationBoolName)
+        : base(stateMachine, enemy, animationBoolName)
     {
     }
 
     public override void Enter()
     {
+        enemy.Movement.StopMovementX();
         base.Enter();
-        entity.StopMovementX();
     }
 
     public override void Update()

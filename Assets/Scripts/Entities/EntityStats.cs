@@ -42,6 +42,7 @@ public class EntityStats : MonoBehaviour
         //    damageValues.Add(keyVal.Key, keyVal.Value);
         //}
 
+        AttackRadius = baseStats.attackRadius;
         MoveSpeed = baseStats.moveSpeed;
         JumpForce = baseStats.jumpForce;
         WallJumpForce = baseStats.wallJumpForce;
