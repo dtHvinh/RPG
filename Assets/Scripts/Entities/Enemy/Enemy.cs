@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public abstract class Enemy : Entity
+[RequireComponent(typeof(EntityStats))]
+public abstract class Enemy : Entity, IEntity<EnemyCombat, EnemyMovement, EntityCollision, EnemyHealth>
 {
     [Header("Enemy Movement Settings")]
     [Range(0, 2)] public float MoveAnimSpeedMulti = 1f;
@@ -21,6 +22,26 @@ public abstract class Enemy : Entity
     public Enemy_BattleState BattleState { get; protected set; }
 
     public EnemyAI AI { get; protected set; }
+    public EnemyCombat Combat { get; protected set; }
+    public EnemyMovement Movement { get; protected set; }
+    public EntityCollision Collision { get; protected set; }
+    public EnemyHealth Health { get; protected set; }
+    public EntityStats Stats { get; protected set; }
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        AI = new EnemyAI(this);
+
+        Combat = GetComponentInChildren<EnemyCombat>();
+        Movement = GetComponentInChildren<EnemyMovement>();
+        Collision = GetComponentInChildren<EntityCollision>();
+        Health = GetComponentInChildren<EnemyHealth>();
+        Stats = GetComponent<EntityStats>();
+    }
+
+    public override float FacingDirection => Movement.FacingDirection;
 
     public void TryEnterBattleState(Transform target)
     {
@@ -45,4 +66,6 @@ public abstract class Enemy : Entity
 
         return default;
     }
+
+    public override void SetVelocity(float xVelocity, float yVelocity) => Movement.SetVelocity(xVelocity, yVelocity);
 }

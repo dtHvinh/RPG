@@ -9,14 +9,16 @@
 
     public bool ShouldKeepChasingTarget()
     {
-        return enemy.FallDameSystem.CheckSafeFall(enemy.Collision.CliffCheckPoint);
+        return true;
+        //return enemy.FallDameSystem.CheckSafeFall(enemy.Collision.CliffCheckPoint);
     }
 
     public bool ShouldStartChasingTarget()
     {
         if (enemy.Collision.CliffDetected)
         {
-            return enemy.FallDameSystem.CheckSafeFall(enemy.Collision.CliffCheckPoint);
+            return true;
+            //return enemy.FallDameSystem.CheckSafeFall(enemy.Collision.CliffCheckPoint);
         }
 
         return true;

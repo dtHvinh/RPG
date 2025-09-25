@@ -181,6 +181,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 662625684}
     m_Modifications:
+    - target: {fileID: 4846019452776803156, guid: d00efdb108cb3dd46a510846fb1988be, type: 3}
+      propertyPath: targetLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: 6260104200994590487, guid: d00efdb108cb3dd46a510846fb1988be, type: 3}
       propertyPath: m_Name
       value: Skeleton
@@ -225,10 +229,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8195764819592867386, guid: d00efdb108cb3dd46a510846fb1988be, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3673451073830766390, guid: d00efdb108cb3dd46a510846fb1988be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1003016271}
   m_SourcePrefab: {fileID: 100100000, guid: d00efdb108cb3dd46a510846fb1988be, type: 3}
 --- !u!1 &179223009
 GameObject:
@@ -27432,6 +27440,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7ae2da87a578664e8b8d9d5fc89d39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndlessLoopBackground
+--- !u!1 &1003016265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3673451073830766390, guid: d00efdb108cb3dd46a510846fb1988be, type: 3}
+  m_PrefabInstance: {fileID: 158058821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1003016271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003016265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eca0ce73f195fcd4eb136612904d80a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationTrigger
 --- !u!1 &1004687272
 GameObject:
   m_ObjectHideFlags: 0
@@ -28088,6 +28113,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1098313060187097726, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1098313060187097726, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
@@ -28131,7 +28160,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6190447957099773654, guid: 4dd7a490f1b191d4d833752f5a95b35b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

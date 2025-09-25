@@ -2,7 +2,7 @@
 
 public class EntityMovement : MonoBehaviour
 {
-    private Entity entity;
+    protected Entity entity;
 
     [Header("Movement Details")]
     public float FacingDirection { get; private set; } = MovementConstants.FacingDirection.RIGHT;
@@ -26,16 +26,6 @@ public class EntityMovement : MonoBehaviour
         }
     }
 
-    public void MoveWithBaseSpeed(float direction)
-    {
-        SetVelocity(entity.Stats.MoveSpeed * Mathf.Sign(direction), entity.Rb.linearVelocityY);
-    }
-
-    public void MoveWithBaseSpeed()
-    {
-        SetVelocity(entity.Stats.MoveSpeed * FacingDirection, entity.Rb.linearVelocityY);
-    }
-
     public void StopMovementX()
     {
         SetVelocity(0f, entity.Rb.linearVelocityY);
@@ -51,4 +41,12 @@ public class EntityMovement : MonoBehaviour
     {
         entity.Rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
+
+    public void FacingToTarget(Transform target)
+    {
+        if (entity.FacingDirection != DirectionToTarget(target))
+            Flip();
+    }
+    public float DirectionToTarget(Transform target) => Mathf.Sign(target.position.x - entity.transform.position.x);
+
 }

@@ -33,9 +33,9 @@ public class EntityCollision : MonoBehaviour
         GroundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, GroundLayer);
 
         WallDetected =
-            Physics2D.Raycast(primaryWallCheck.position, Vector2.right * entity.Movement.FacingDirection, wallCheckDistance, GroundLayer) &&
+            Physics2D.Raycast(primaryWallCheck.position, Vector2.right * entity.FacingDirection, wallCheckDistance, GroundLayer) &&
             (secondaryWallCheck == null ||
-                Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * entity.Movement.FacingDirection, wallCheckDistance, GroundLayer));
+                Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * entity.FacingDirection, wallCheckDistance, GroundLayer));
 
 
         CliffDetected = !Physics2D.Raycast(CliffCheckPoint.position, Vector2.down, cliffCheckDistance, GroundLayer);

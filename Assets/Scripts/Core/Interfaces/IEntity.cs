@@ -6,14 +6,22 @@ public interface IEntity
     Animator Animator { get; }
 }
 
-public interface IEntity<TCombat, TMovement, TCollision, THealth> : IEntity
+public interface IEntity<TCombat, TMovement, TCollision, THealth, TStats>
+    : IEntity, IHasCollision<TCollision>, IHasCombat<TCombat>, IHasMovement<TMovement>, IHasHealth<THealth>, IHasStats<TStats>
+    where TCombat : EntityCombat
+    where TMovement : EntityMovement
+    where TCollision : EntityCollision
+    where THealth : EntityHealth
+    where TStats : EntityStats
+{
+}
+
+public interface IEntity<TCombat, TMovement, TCollision, THealth>
+    : IEntity, IHasCollision<TCollision>, IHasCombat<TCombat>, IHasMovement<TMovement>, IHasHealth<THealth>, IHasStats<EntityStats>
     where TCombat : EntityCombat
     where TMovement : EntityMovement
     where TCollision : EntityCollision
     where THealth : EntityHealth
 {
-    TCombat Combat { get; }
-    TMovement Movement { get; }
-    TCollision Collision { get; }
-    THealth Health { get; }
+    EntityStats Stats { get; }
 }

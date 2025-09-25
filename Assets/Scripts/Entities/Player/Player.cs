@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : Entity
+[RequireComponent(typeof(EntityStats))]
+public class Player : Entity, IEntity<PlayerCombat, PlayerMovement, PlayerCollision, EntityHealth>
 {
     private Coroutine queuedAttackCo;
 
@@ -21,6 +22,14 @@ public class Player : Entity
     public Player_BasicAttack3State BasicAttack3State { get; private set; }
     public Player_PlungeAttackState PlungeAttackState { get; private set; }
 
+    public PlayerCombat Combat { get; private set; }
+    public PlayerMovement Movement { get; private set; }
+    public PlayerCollision Collision { get; private set; }
+    public EntityHealth Health { get; private set; }
+    public EntityStats Stats { get; private set; }
+
+    public override float FacingDirection => Movement.FacingDirection;
+
     [Header("Movement Details")]
     public float JumpAirResistance = 0.8f;
     public float DashSpeed = 20f;
@@ -37,6 +46,12 @@ public class Player : Entity
         base.Awake();
 
         Inputs = new PlayerInputSet();
+
+        Combat = GetComponentInChildren<PlayerCombat>();
+        Movement = GetComponentInChildren<PlayerMovement>();
+        Collision = GetComponentInChildren<PlayerCollision>();
+        Health = GetComponentInChildren<EntityHealth>();
+        Stats = GetComponent<EntityStats>();
     }
 
     public override void InitializeStates()
@@ -82,6 +97,8 @@ public class Player : Entity
         yield return new WaitForEndOfFrame();
         StateMachine.ChangeState(nextAttackState);
     }
+
+    public override void SetVelocity(float xVelocity, float yVelocity) => Movement.SetVelocity(xVelocity, yVelocity);
 
     public void ChangeAttackState(Player_BasicAttackState nextAttackState)
     {
