@@ -3,6 +3,8 @@ using UnityEngine;
 
 public static class DebugHelper
 {
+    public static bool IsDebugEnabled = true;
+
     public static GUIStyle GetSmallGUIStyle(Color color)
     {
         GUIStyle smallLabel = new GUIStyle();

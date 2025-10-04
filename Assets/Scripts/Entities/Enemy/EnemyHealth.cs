@@ -2,17 +2,15 @@
 {
     private Enemy enemy;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         enemy = GetComponentInParent<Enemy>();
     }
 
-    public override void TakeDamage(DameDealingInfo info)
+    public override void TakeDamage(DameInstance info)
     {
-        if (info.dameDealer.CompareTag(Tags.Player))
-        {
-            enemy.TryEnterBattleState(info.dameDealer.transform);
-        }
         base.TakeDamage(info);
     }
 }

@@ -2,29 +2,36 @@
 
 public class PlayerCombat : EntityCombat
 {
-    private Player player;
+    [Header("Counter attack details")]
+    [SerializeField] private float counterAttackWindow;
 
     protected override void Awake()
     {
-        player = GetComponentInParent<Player>();
-        entity = player;
+        base.Awake();
+
     }
 
-    protected override Collider2D[] GetDetectedColliders()
-    {
-        return Physics2D.OverlapCircleAll(attackPoint.position, player.Stats.AttackRadius, targetLayers);
-    }
+    public float GetCounterAttackWindow() => counterAttackWindow;
 
-    public override void PerformAttack()
+    public bool CounterAttackPerformed()
     {
-        foreach (var collider in GetDetectedColliders())
+        bool hasCounterPerfomed = false;
+
+        int count = GetHitBoxes(stats.AttackRadius);
+
+        for (int i = 0; i < count; i++)
         {
-            if (collider.TryGetComponent<Enemy>(out var target))
-                target.Health.TakeDamage(new DameDealingInfo()
-                {
-                    damage = dame,
-                    dameDealer = entity.transform,
-                });
+            HitBox hitBox = GetHitBoxes()[i];
+
+            ICounterable counterable = hitBox.GetCounterable();
+            if (counterable != null
+                && counterable.CanBeCountered)
+            {
+                hasCounterPerfomed = true;
+                counterable.HandleCounter();
+            }
         }
+
+        return hasCounterPerfomed;
     }
 }

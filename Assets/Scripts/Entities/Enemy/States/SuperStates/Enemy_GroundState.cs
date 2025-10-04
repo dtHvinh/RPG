@@ -9,7 +9,7 @@ public class Enemy_GroundState : EnemyState
     {
         base.Update();
 
-        if (enemy.DetectTarget() == true
+        if (enemy.Combat.DetectTarget() == true
             && enemy.AI.ShouldStartChasingTarget())
         {
             stateMachine.ChangeState(enemy.BattleState);

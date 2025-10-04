@@ -7,7 +7,7 @@ public class Enemy_AttackState : EnemyState
 
     public override void Enter()
     {
-        enemy.Movement.StopMovementX();
+        enemy.Movement.Stop();
         base.Enter();
     }
 

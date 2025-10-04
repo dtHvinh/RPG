@@ -13,6 +13,11 @@ public class PlayerState : EntityState
         this.player = player;
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+    }
+
     public override void Update()
     {
         base.Update();
@@ -38,6 +43,7 @@ public class PlayerState : EntityState
     {
         base.UpdateAnimationParameters();
 
+        Animator.SetFloat(AnimatorConstants.MOVE_ANIM_SPEED_MULTI, player.Movement.MoveAnimSpeedMulti);
         Animator.SetFloat(AnimatorConstants.Y_VELOCITY, Rb.linearVelocityY);
     }
 }

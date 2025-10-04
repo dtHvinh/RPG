@@ -1,5 +1,5 @@
-﻿public interface IHasMovement<IMovement> where IMovement : EntityMovement
+﻿public interface IHasMovement<TMovement> where TMovement : IMovement
 {
-    IMovement Movement { get; }
+    TMovement Movement { get; }
 }
 

@@ -12,7 +12,7 @@
     {
         base.Enter();
 
-        stateTimer = player.DashDuration;
+        SetTimer(player.Movement.DashDuration);
 
         originalGravity = Rb.gravityScale;
         Rb.gravityScale = 0;
@@ -22,9 +22,9 @@
     {
         base.Update();
 
-        player.SetVelocity(player.FacingDirection * player.DashSpeed, 0);
+        player.SetVelocity(player.FacingDirection * player.Movement.DashSpeed, 0);
 
-        if (stateTimer < 0)
+        if (IsTimerFinished())
         {
             if (player.Collision.GroundDetected)
                 stateMachine.ChangeState(player.IdleState);

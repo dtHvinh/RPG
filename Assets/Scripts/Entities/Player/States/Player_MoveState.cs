@@ -16,13 +16,18 @@ public class Player_MoveState : Player_GroundState
             stateMachine.ChangeState(player.IdleState);
         }
 
-        player.SetVelocity(
-            xVelocity: MoveInput.x * player.Stats.MoveSpeed,
-            yVelocity: Rb.linearVelocity.y);
+        if (player.Inputs.Player.Slide.WasPressedThisFrame())
+        {
+            stateMachine.ChangeState(player.SlideState);
+        }
 
         if (!player.Collision.GroundDetected)
         {
             stateMachine.ChangeState(player.FallState);
         }
+
+        player.SetVelocity(
+            xVelocity: MoveInput.x * player.Stats.MoveSpeed,
+            yVelocity: Rb.linearVelocity.y);
     }
 }

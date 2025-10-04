@@ -1,4 +1,4 @@
-﻿public interface IHasCollision<TCollision> where TCollision : EntityCollision
+﻿public interface IHasCollision<TCollision> where TCollision : ICollision
 {
     TCollision Collision { get; }
 }

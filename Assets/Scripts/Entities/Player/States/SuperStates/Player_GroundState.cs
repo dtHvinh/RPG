@@ -13,9 +13,14 @@ public class Player_GroundState : PlayerState
             stateMachine.ChangeState(player.JumpState);
         }
 
-        if(Inputs.Player.Attack.WasPerformedThisFrame())
+        if (Inputs.Player.Attack.WasPerformedThisFrame())
         {
             stateMachine.ChangeState(player.BasicAttack1State);
+        }
+
+        if (Inputs.Player.CounterAttack.WasPerformedThisFrame())
+        {
+            stateMachine.ChangeState(player.CounterState);
         }
     }
 }

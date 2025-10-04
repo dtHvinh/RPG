@@ -1,11 +1,10 @@
-public class Skeleton : Enemy
-{
-    public override void Awake()
-    {
-        base.Awake();
+using System;
 
-        AI = new EnemyAI(this);
-    }
+public class Skeleton : Enemy, ICounterable
+{
+    public bool CanBeCountered { get => Combat.CanBeCounter(); }
+
+    public event EventHandler OnCounter;
 
     public override void InitializeStates()
     {
@@ -13,15 +12,18 @@ public class Skeleton : Enemy
         MoveState = new Enemy_MoveState(StateMachine, this, "move");
         AttackState = new Enemy_AttackState(StateMachine, this, "attack");
         BattleState = new Enemy_BattleState(StateMachine, this, "battle");
+        HurtState = new Enemy_HurtState(StateMachine, this, "hurt");
+        DeathState = new Enemy_DeathState(StateMachine, this, "death");
+        StunnedState = new Enemy_StunnedState(StateMachine, this, "stunned");
     }
 
-    public override void SetInitialState()
+    public void HandleCounter()
     {
-        StateMachine.Initialize(MoveState);
-    }
-
-    protected override void Update()
-    {
-        base.Update();
+        if (CanBeCountered)
+        {
+            OnCounter?.Invoke(this, EventArgs.Empty);
+            Combat.EnableCounterWindow(false);
+            StateMachine.ChangeState(StunnedState);
+        }
     }
 }

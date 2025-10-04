@@ -10,7 +10,7 @@ public class Player_AiredState : PlayerState
         base.Update();
 
         if (MoveInput.x != 0)
-            player.SetVelocity(MoveInput.x * player.Stats.MoveSpeed * player.JumpAirResistance, Rb.linearVelocityY);
+            player.SetVelocity(MoveInput.x * player.Stats.MoveSpeed * player.Movement.JumpAirResistance, Rb.linearVelocityY);
 
         if (Inputs.Player.Attack.WasPressedThisFrame())
         {

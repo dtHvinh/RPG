@@ -10,7 +10,7 @@ public abstract class EntityState
 
     public string AnimationBoolName { get; protected set; }
 
-    protected float stateTimer;
+    private float stateTimer;
     protected bool triggerCalled;
 
     protected EntityState(EntityStateMachine stateMachine, IEntity entity, string animationBoolName)
@@ -32,10 +32,14 @@ public abstract class EntityState
 
     public virtual void Update()
     {
-        stateTimer -= Time.deltaTime;
+        stateTimer = Mathf.Max(stateTimer - Time.deltaTime, 0f);
 
         UpdateAnimationParameters();
     }
+
+    public void SetTimer(float time) => stateTimer = time;
+
+    public bool IsTimerFinished() => stateTimer <= 0;
 
     public virtual void Exit()
     {

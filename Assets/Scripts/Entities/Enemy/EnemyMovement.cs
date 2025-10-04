@@ -1,22 +1,23 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(IStats))]
 public class EnemyMovement : EntityMovement
 {
-    private Enemy enemy;
+    private IStats stats;
 
-    private void Awake()
-    {
-        enemy = GetComponentInParent<Enemy>();
-        entity = enemy;
-    }
+    [Header("Enemy Movement Settings")]
+    [Range(0, 2)] public float BattleAnimSpeedMulti = 1f;
+    public float IdleTime = 2f;
 
-    public void MoveWithBaseSpeed(float direction)
+    protected override void Awake()
     {
-        enemy.SetVelocity(enemy.Stats.MoveSpeed * Mathf.Sign(direction), enemy.Rb.linearVelocityY);
+        base.Awake();
+
+        stats = GetComponent<IStats>();
     }
 
     public void MoveWithBaseSpeed()
     {
-        enemy.SetVelocity(enemy.Stats.MoveSpeed * enemy.FacingDirection, enemy.Rb.linearVelocityY);
+        SetVelocity(stats.MoveSpeed * FacingDirection, entity.Rb.linearVelocityY);
     }
 }

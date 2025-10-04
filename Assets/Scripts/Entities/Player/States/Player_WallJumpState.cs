@@ -13,7 +13,7 @@ public class Player_WallJumpState : Player_AiredState
 
         var jumpVector = player.Stats.WallJumpForce;
 
-        player.SetVelocity(jumpVector.x * -player.FacingDirection * player.JumpAirResistance, jumpVector.y);
+        player.SetVelocity(jumpVector.x * -player.FacingDirection * player.Movement.JumpAirResistance, jumpVector.y);
     }
 
     public override void Update()

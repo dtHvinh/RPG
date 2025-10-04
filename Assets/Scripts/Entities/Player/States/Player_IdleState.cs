@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Player_IdleState : Player_GroundState
 {
     public const string STATE_NAME = "idle";
@@ -13,9 +11,7 @@ public class Player_IdleState : Player_GroundState
     {
         base.Enter();
 
-        Debug.Assert(player != null, "Player is null");
-
-        player.SetVelocity(0, Rb.linearVelocityY);
+        player.Movement.Stop();
     }
 
     public override void Update()

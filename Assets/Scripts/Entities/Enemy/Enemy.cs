@@ -1,18 +1,19 @@
 using UnityEngine;
 
 [RequireComponent(typeof(EntityStats))]
-public abstract class Enemy : Entity, IEntity<EnemyCombat, EnemyMovement, EntityCollision, EnemyHealth>
+[RequireComponent(typeof(EnemyAI))]
+[RequireComponent(typeof(EnemyCombat))]
+[RequireComponent(typeof(EnemyMovement))]
+[RequireComponent(typeof(EntityCollision))]
+[RequireComponent(typeof(EnemyHealth))]
+public abstract class Enemy : Entity,
+    IHasCombat<EnemyCombat>,
+    IHasMovement<EnemyMovement>,
+    IHasCollision<EntityCollision>,
+    IHasHealth<EnemyHealth>,
+    IHasStats<EntityStats>,
+    IHasAI<EnemyAI>
 {
-    [Header("Enemy Movement Settings")]
-    [Range(0, 2)] public float MoveAnimSpeedMulti = 1f;
-    [Range(0, 2)] public float BattleAnimSpeedMulti = 1f;
-    public float IdleTime = 2f;
-
-    [Header("Target Detection")]
-    [SerializeField] protected float detectionDistance = 10f;
-    [SerializeField] protected LayerMask detectionTargetLayers;
-    [SerializeField] protected Transform detectionCheckPoint;
-
     [Header("Battle Settings")]
     public float battleMoveSpeedMulti = 1.5f;
 
@@ -20,6 +21,9 @@ public abstract class Enemy : Entity, IEntity<EnemyCombat, EnemyMovement, Entity
     public Enemy_MoveState MoveState { get; protected set; }
     public Enemy_AttackState AttackState { get; protected set; }
     public Enemy_BattleState BattleState { get; protected set; }
+    public Enemy_HurtState HurtState { get; protected set; }
+    public Enemy_DeathState DeathState { get; protected set; }
+    public Enemy_StunnedState StunnedState { get; protected set; }
 
     public EnemyAI AI { get; protected set; }
     public EnemyCombat Combat { get; protected set; }
@@ -32,39 +36,48 @@ public abstract class Enemy : Entity, IEntity<EnemyCombat, EnemyMovement, Entity
     {
         base.Awake();
 
-        AI = new EnemyAI(this);
-
-        Combat = GetComponentInChildren<EnemyCombat>();
-        Movement = GetComponentInChildren<EnemyMovement>();
-        Collision = GetComponentInChildren<EntityCollision>();
-        Health = GetComponentInChildren<EnemyHealth>();
+        AI = GetComponent<EnemyAI>();
+        Combat = GetComponent<EnemyCombat>();
+        Movement = GetComponent<EnemyMovement>();
+        Collision = GetComponent<EntityCollision>();
+        Health = GetComponent<EnemyHealth>();
         Stats = GetComponent<EntityStats>();
     }
 
     public override float FacingDirection => Movement.FacingDirection;
 
-    public void TryEnterBattleState(Transform target)
+    public override void InitializeStates()
     {
-        if (StateMachine.CurrentState == BattleState
-            || StateMachine.CurrentState == AttackState)
-            return;
 
-        Combat.SetTarget(target);
-        StateMachine.ChangeState(BattleState);
     }
 
-    public RaycastHit2D DetectTarget()
+    public override void SubscribeToEvents()
     {
-        RaycastHit2D hit = Physics2D.Raycast(
-            origin: detectionCheckPoint.position,
-            direction: Vector2.right * FacingDirection,
-            distance: detectionDistance,
-            layerMask: detectionTargetLayers | Collision.GroundLayer);
+        base.SubscribeToEvents();
 
-        if (hit.collider != null && ((1 << hit.collider.gameObject.layer) & Collision.GroundLayer) == 0)
-            return hit;
+        Health.OnHurt += EnemyHealth_OnHurt;
+        Health.OnDeath += EnemyHealth_OnDeath;
+    }
 
-        return default;
+    private void EnemyHealth_OnDeath(object sender, DeathEventArgrs e)
+    {
+        Death();
+    }
+
+    private void EnemyHealth_OnHurt(object sender, EntityHurtEventArgs e)
+    {
+        Combat.SetTarget(e.Hurt.DameDealer.Transform);
+        TryEnterState(HurtState);
+    }
+
+    public override void Death()
+    {
+        TryEnterState(DeathState);
+    }
+
+    public override void SetInitialState()
+    {
+        StateMachine.Initialize(MoveState);
     }
 
     public override void SetVelocity(float xVelocity, float yVelocity) => Movement.SetVelocity(xVelocity, yVelocity);

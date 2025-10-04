@@ -1,3 +1,4 @@
-﻿public interface IHasStats<TStats> where TStats : EntityStats
+﻿public interface IHasStats<TStats> where TStats : IStats
 {
+    TStats Stats { get; }
 }

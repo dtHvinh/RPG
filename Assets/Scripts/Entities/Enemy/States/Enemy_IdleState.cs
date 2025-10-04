@@ -9,7 +9,7 @@ public class Enemy_IdleState : Enemy_GroundState
     {
         base.Enter();
 
-        stateTimer = enemy.IdleTime;
+        SetTimer(enemy.Movement.IdleTime);
 
         enemy.SetVelocity(0f, Rb.linearVelocityY);
     }
@@ -22,7 +22,7 @@ public class Enemy_IdleState : Enemy_GroundState
         {
             stateMachine.ChangeState(enemy.MoveState);
         }
-        else if (stateTimer <= 0f)
+        else if (IsTimerFinished())
         {
             enemy.Movement.Flip();
         }
