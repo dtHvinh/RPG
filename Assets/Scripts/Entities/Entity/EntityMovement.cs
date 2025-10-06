@@ -5,7 +5,7 @@ public class EntityMovement : MonoBehaviour, IMovement
 {
     protected IEntity entity;
 
-    [Range(0, 2)] public float MoveAnimSpeedMulti = 1f;
+    [Range(0, 2)] public float MoveAnimationSpeed { get; set; } = 1f;
 
     [Header("Movement Details")]
     public float FacingDirection { get; private set; } = MovementConstants.FacingDirection.RIGHT;

@@ -6,22 +6,38 @@ using UnityEngine;
 public class StatusEffectList
 {
     [SerializeReference] private List<StatusEffect> effects;
+    private float _accumulator = 0;
+
+    public event EventHandler<StatusEffectStartEventArgs> OnEffectStart;
+    public event EventHandler<StatusEffectEndEventArgs> OnEffectEnd;
+
 
     public StatusEffectList()
     {
         effects = new List<StatusEffect>();
     }
 
-    public void Tick()
+    public void OnTick(float delta)
     {
+        _accumulator += delta;
+
         for (int i = effects.Count - 1; i >= 0; i--)
         {
             var effect = effects[i];
-            effect.Tick();
+            bool isSecond = false;
+
+            if (_accumulator >= 1f)
+            {
+                isSecond = true;
+                _accumulator -= 1;
+            }
+
+            effect.OnTick(delta, isSecond);
 
             if (effect.IsExpired)
             {
                 effect.EffectEnd();
+                OnEffectEnd?.Invoke(this, StatusEffectEndEventArgs.Create(effect));
                 effects.RemoveAt(i);
             }
         }
@@ -31,7 +47,8 @@ public class StatusEffectList
     {
         if (newEffect.EffectType == EffectType.Unique)
         {
-            if (SearchForEffect(newEffect, out StatusEffect exist))
+            if (SearchForEffect(newEffect, out StatusEffect exist)
+                && newEffect.CompareTo(exist) >= 0)
             {
                 newEffect.OverrideEffect(exist);
             }
@@ -40,8 +57,13 @@ public class StatusEffectList
                 effects.Add(newEffect);
             }
         }
+        else if (newEffect.EffectType == EffectType.Stackable)
+        {
+            effects.Add(newEffect);
+        }
 
         newEffect.EffectStart();
+        OnEffectStart?.Invoke(this, StatusEffectStartEventArgs.Create(newEffect));
     }
 
     private bool SearchForEffect(StatusEffect search, out StatusEffect effect)
@@ -58,4 +80,23 @@ public class StatusEffectList
         effect = null;
         return false;
     }
+
+    public override string ToString()
+    {
+        return $"Currently have {effects.Count} effect(s)";
+    }
+}
+
+public class StatusEffectStartEventArgs
+{
+    public StatusEffect Effect;
+
+    public static StatusEffectStartEventArgs Create(StatusEffect effect) => new() { Effect = effect };
+}
+
+public class StatusEffectEndEventArgs
+{
+    public StatusEffect Effect;
+
+    public static StatusEffectEndEventArgs Create(StatusEffect effect) => new() { Effect = effect };
 }

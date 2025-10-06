@@ -33,6 +33,12 @@ public class VFXManager : MonoBehaviour
         if (prefab == null) return null;
         return Instantiate(prefab, position, rotation);
     }
+
+    public void ShowGhost(SpriteRenderer mainRenderer, float lifetime)
+    {
+        GameObject ghost = AfterimageTrailPool.Instance.GetFromPool();
+        ghost.GetComponent<TrailEffect>().Setup(mainRenderer, lifetime);
+    }
 }
 
 [Serializable]

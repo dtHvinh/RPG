@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class StatFormular
 {
@@ -33,8 +34,11 @@ public static class StatFormular
 
     public static float FinalDameTaken(DameResult dameResult,
                                        MigrationResult migrationResult,
-                                       ArmorReductionResult armorReductionResult)
+                                       ArmorPenetrationResult armorReductionResult)
     {
+        if (dameResult.DameType == DameTypes.TrueDame)
+            return dameResult.BaseDamage * (dameResult.IsCritical ? dameResult.CriticalDamageMultiplier : 1);
+
         float rawDamage = dameResult.BaseDamage * (dameResult.IsCritical ? dameResult.CriticalDamageMultiplier : 1);
 
         float armor = migrationResult.TotalArmor * (1 - armorReductionResult.TotalReduction);
@@ -43,4 +47,34 @@ public static class StatFormular
 
         return rawDamage * dameAfterMigrationMultiplier;
     }
+
+    public static float FinalStat(float baseStat, List<StatModifier> modifiers)
+    {
+        float flatAdd = 0f;
+        float percentAdd = 0f;
+        float percentMult = 0f;
+
+        foreach (var mod in modifiers)
+        {
+            switch (mod.Type)
+            {
+                case StatModifierType.Flat:
+                    flatAdd += mod.Value;
+                    break;
+                case StatModifierType.PercentAdd:
+                    percentAdd += mod.Value;
+                    break;
+                case StatModifierType.PercentMult:
+                    percentMult += mod.Value;
+                    break;
+            }
+        }
+
+        float finalValue = baseStat + (baseStat * percentAdd) + flatAdd;
+
+        finalValue *= 1 + percentMult;
+
+        return finalValue;
+    }
+
 }

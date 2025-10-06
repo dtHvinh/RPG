@@ -21,15 +21,20 @@ public readonly struct DameResult
     }
 }
 
-public readonly struct ArmorReductionResult
+public readonly struct ArmorPenetrationResult
 {
     public readonly float TotalReduction;
 
-    public ArmorReductionResult(float totalReduction) => TotalReduction = totalReduction;
+    public static ArmorPenetrationResult Zero => new(0f);
+
+    public ArmorPenetrationResult(float totalReduction) => TotalReduction = totalReduction;
 }
 
 public readonly struct ElementalResistanceResult
 {
     public readonly float TotalResistance;
+
+    public static ElementalResistanceResult Zero => new(0f);
+
     public ElementalResistanceResult(float totalResistance) => TotalResistance = totalResistance;
 }

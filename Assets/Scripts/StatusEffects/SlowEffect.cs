@@ -8,7 +8,7 @@ public class SlowEffect : StatusEffect
 {
     private readonly SlowEffectConfig _config;
 
-    public SlowEffect(Type source, SlowEffectConfig config)
+    public SlowEffect(string source, SlowEffectConfig config)
         : base(source, config.Duration, EffectType.Unique, EffectTypeId.SlowEffect)
     {
         _config = config;
@@ -18,12 +18,16 @@ public class SlowEffect : StatusEffect
     {
         StatModifier modifier = StatModifier.Create(Source, _config.SlowPercentage * -1, StatModifierType.PercentMult);
 
+        _config.Movement.MoveAnimationSpeed = 1 - _config.SlowPercentage;
+
         _config.Stats.MoveSpeed.AddModifier(modifier);
     }
 
     public override void EffectEnd()
     {
         _config.Stats.MoveSpeed.RemoveModifiersFromSource(Source);
+
+        _config.Movement.MoveAnimationSpeed += _config.SlowPercentage;
     }
 
     public override int CompareTo(StatusEffect other)
@@ -38,27 +42,20 @@ public class SlowEffect : StatusEffect
 
     public override void OverrideEffect(StatusEffect existEffect)
     {
-        base.OverrideEffect(existEffect);
-
         if (existEffect is SlowEffect existSlowEffect)
         {
-            existSlowEffect.EffectEnd();
+            base.OverrideEffect(existEffect);
             existSlowEffect.ResetDuration(_config.Duration);
             existSlowEffect._config.SlowPercentage = Math.Max(existSlowEffect._config.SlowPercentage, _config.SlowPercentage);
         }
     }
 }
 
+[Serializable]
 public class SlowEffectConfig
 {
     public float SlowPercentage;
-    public IStats Stats;
     public float Duration;
-
-    public SlowEffectConfig(float slowPercentage, float duration, IStats stats)
-    {
-        SlowPercentage = Math.Abs(slowPercentage);
-        Stats = stats;
-        Duration = duration;
-    }
+    public IStats Stats;
+    public IMovement Movement;
 }

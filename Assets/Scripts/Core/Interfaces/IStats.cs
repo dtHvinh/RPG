@@ -15,9 +15,14 @@ public interface IStats
     Stat CriticalChance { get; }
     Stat CriticalDamage { get; }
     Stat Evasion { get; }
+    Stat Armor { get; }
+    Stat MagicResistant { get; }
+    Stat ArmorPenetration { get; }
+    Stat HealthRegen { get; }
+    Stat HealthInterval { get; }
 
     MigrationResult GetArmorMitigation();
-    ArmorReductionResult GetArmorPenetration();
+    ArmorPenetrationResult GetArmorPenetration();
     float GetMaxHealth();
     DameResult GetPhysicalDamage();
 }

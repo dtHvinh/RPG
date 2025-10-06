@@ -70,6 +70,13 @@ public class HealthBar : MonoBehaviour
         if (!slowBarInfo.IsEnable)
             return;
 
+        // If the health is regenerating, set the slow bar immediately to the current fill amount
+        if (IsRegenerate(fillSlow.fillAmount, fill))
+        {
+            fillSlow.fillAmount = fill;
+            return;
+        }
+
         if (slowBarCoroutine != null)
         {
             StopCoroutine(slowBarCoroutine);
@@ -89,6 +96,11 @@ public class HealthBar : MonoBehaviour
             yield return null;
         }
         fillSlow.fillAmount = to;
+    }
+
+    private bool IsRegenerate(float old, float current)
+    {
+        return current > old;
     }
 }
 

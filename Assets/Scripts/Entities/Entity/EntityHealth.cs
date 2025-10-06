@@ -33,7 +33,7 @@ public class EntityHealth : MonoBehaviour, IHealth
         if (isDead)
             return;
 
-        float finalDamage = StatFormular.FinalDameTaken(info.damage, stats.GetArmorMitigation(), info.armorReduction);
+        float finalDamage = StatFormular.FinalDameTaken(info.damage, stats.GetArmorMitigation(), info.armorPen);
         CurrentHealth = Mathf.Clamp(CurrentHealth - finalDamage, 0, MaxHealth);
 
         OnHealthChange?.Invoke(this, (CurrentHealth, MaxHealth));
@@ -50,6 +50,16 @@ public class EntityHealth : MonoBehaviour, IHealth
             OnDeath?.Invoke(this, (info.dameDealer, entity));
             isDead = true;
         }
+    }
+
+    public void Regenerate(float amount)
+    {
+        if (isDead)
+            return;
+
+        CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
+
+        OnHealthChange?.Invoke(this, (CurrentHealth, MaxHealth));
     }
 }
 

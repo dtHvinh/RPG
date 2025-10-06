@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
+[Serializable]
 public class Stat
 {
+    [SerializeField] private float baseValue = 0f;
+    [SerializeField] private List<StatModifier> modifiers = new();
+
     private bool _isDirty = true;
     private float _currentValue = 0f;
 
-    public float BaseValue { get; private set; }
-
-    private readonly List<StatModifier> modifiers = new();
+    public float BaseValue => baseValue;
 
     public event EventHandler OnStatModified;
 
@@ -18,36 +21,14 @@ public class Stat
         {
             if (_isDirty)
             {
-                float finalValue = BaseValue;
-                float percentAdd = 0f;
-
-                foreach (var mod in modifiers)
-                {
-                    switch (mod.Type)
-                    {
-                        case StatModifierType.Flat:
-                            finalValue += mod.Value;
-                            break;
-                        case StatModifierType.PercentAdd:
-                            percentAdd += mod.Value;
-                            break;
-                        case StatModifierType.PercentMult:
-                            finalValue *= 1 + mod.Value;
-                            break;
-                    }
-                }
-
-                if (percentAdd != 0)
-                    finalValue *= 1 + percentAdd;
-
-                _currentValue = finalValue;
+                _currentValue = StatFormular.FinalStat(BaseValue, modifiers);
                 _isDirty = false;
             }
-            return _currentValue;
+            return (float)Math.Round(_currentValue, 2);
         }
     }
 
-    public Stat(float baseValue) => BaseValue = baseValue;
+    public Stat(float baseValue) => this.baseValue = baseValue;
 
     public void AddModifier(StatModifier modifier)
     {
@@ -55,7 +36,7 @@ public class Stat
         OnModifiedInvoke();
     }
 
-    public void RemoveModifiersFromSource(Type source)
+    public void RemoveModifiersFromSource(string source)
     {
         modifiers.RemoveAll(m => m.Source == source);
         OnModifiedInvoke();
@@ -76,6 +57,4 @@ public class Stat
         OnStatModified?.Invoke(this, EventArgs.Empty);
     }
 }
-
-
 

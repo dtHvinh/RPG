@@ -1,28 +1,39 @@
 ﻿using System;
+using UnityEngine;
 
 [Serializable]
 public abstract class StatusEffect : IComparable<StatusEffect>
 {
-    public EffectType EffectType { get; }
-    public EffectTypeId EffectTypeId { get; }
-    public Type Source { get; private set; }
+    [SerializeField] private EffectType effectType;
+    [SerializeField] private EffectTypeId effectTypeId;
+    [SerializeField] private string source;
+    [SerializeField] private float duration;
+    [SerializeField] private float tickElapse;
 
-    public float Duration { get; protected set; }
-    public float Elapsed { get; protected set; }
-    public bool IsExpired => Elapsed >= Duration;
+    public const float InfiniteDuration = -1;
 
+    public EffectType EffectType => effectType;
+    public EffectTypeId EffectTypeId => effectTypeId;
+    public string Source => source;
 
-    protected StatusEffect(Type source, float duration, EffectType effectType, EffectTypeId effectTypeId)
+    public float Duration => duration;
+    public float TickElapsed => tickElapse;
+    public bool IsExpired => !IsInfiniteEffect() && TickElapsed >= Duration;
+
+    protected StatusEffect(string source, float duration, EffectType effectType, EffectTypeId effectTypeId)
     {
-        Source = source;
-        EffectType = effectType;
-        EffectTypeId = effectTypeId;
-        Duration = duration;
+        this.source = source;
+        this.effectType = effectType;
+        this.effectTypeId = effectTypeId;
+        this.duration = duration;
     }
 
-    public virtual void Tick()
+    public virtual void OnTick(float delta, bool second)
     {
-        Elapsed += 1;
+        if (!IsInfiniteEffect())
+        {
+            tickElapse += delta;
+        }
     }
 
     public abstract void EffectStart();
@@ -31,18 +42,27 @@ public abstract class StatusEffect : IComparable<StatusEffect>
 
     public void ResetDuration(float duration)
     {
-        Duration = duration;
-        Elapsed = 0;
+        this.duration = duration;
+        tickElapse = 0;
+    }
+
+    public bool IsInfiniteEffect()
+    {
+        return Duration == InfiniteDuration;
     }
 
     public void AddDuration(float additionalDuration)
     {
-        Duration += additionalDuration;
+        duration += additionalDuration;
     }
 
+    /// <summary>
+    /// Update source and end effect.
+    /// </summary>
     public virtual void OverrideEffect(StatusEffect existEffect)
     {
-        existEffect.Source = Source;
+        existEffect.source = Source;
+        EffectEnd();
     }
 
     public abstract int CompareTo(StatusEffect other);

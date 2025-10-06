@@ -43,7 +43,7 @@ public class PlayerState : EntityState
     {
         base.UpdateAnimationParameters();
 
-        Animator.SetFloat(AnimatorConstants.MOVE_ANIM_SPEED_MULTI, player.Movement.MoveAnimSpeedMulti);
+        Animator.SetFloat(AnimatorConstants.MOVE_ANIM_SPEED_MULTI, player.Movement.MoveAnimationSpeed);
         Animator.SetFloat(AnimatorConstants.Y_VELOCITY, Rb.linearVelocityY);
     }
 }

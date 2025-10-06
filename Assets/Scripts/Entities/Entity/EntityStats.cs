@@ -4,36 +4,30 @@ public class EntityStats : MonoBehaviour, IStats
 {
     [SerializeField] private EntityBaseStatsSO baseStats;
 
-    [Header("Primary stats")]
-    public Stat BaseMaxHealth { get; private set; }
-    public Stat AttackRadius { get; private set; }
-    public Stat MoveSpeed { get; private set; }
-    public Stat JumpForce { get; private set; }
+    [field: SerializeField, Header("Primary stats")] public Stat BaseMaxHealth { get; private set; }
+    [field: SerializeField] public Stat AttackRadius { get; private set; }
+    [field: SerializeField] public Stat MoveSpeed { get; private set; }
+    [field: SerializeField] public Stat JumpForce { get; private set; }
     public Vector2 WallJumpForce { get; private set; }
 
-    [Header("Core stats")]
-    public Stat Vitality { get; private set; }
-    public Stat Strength { get; private set; }
-    public Stat Agility { get; private set; }
-    public Stat Intelligence { get; private set; }
+    [field: SerializeField, Header("Core stats")] public Stat Vitality { get; private set; }
+    [field: SerializeField] public Stat Strength { get; private set; }
+    [field: SerializeField] public Stat Agility { get; private set; }
+    [field: SerializeField] public Stat Intelligence { get; private set; }
 
-    [Header("Offensive stats")]
-    public Stat Attack { get; private set; }
-    public Stat CriticalChance { get; private set; }
-    public Stat CriticalDamage { get; private set; }
-    public Stat IceDamage { get; private set; }
-    public Stat FireDamage { get; private set; }
-    public Stat LightningDamage { get; private set; }
+    [field: SerializeField, Header("Offensive stats")] public Stat Attack { get; private set; }
+    [field: SerializeField] public Stat CriticalChance { get; private set; }
+    [field: SerializeField] public Stat CriticalDamage { get; private set; }
+    [field: SerializeField] public Stat MagicDamage { get; private set; }
 
-    [Header("Defensive stats")]
-    public Stat Evasion { get; private set; }
-    public Stat Armor { get; private set; }
-    public Stat FireResistant { get; private set; }
-    public Stat IceResistant { get; private set; }
-    public Stat LightningResistant { get; private set; }
+    [field: SerializeField, Header("Defensive stats")] public Stat Evasion { get; private set; }
+    [field: SerializeField] public Stat Armor { get; private set; }
+    [field: SerializeField] public Stat MagicResistant { get; private set; }
 
-    [Header("Reduction stats")]
-    public Stat ArmorPenetration { get; private set; }
+    [field: SerializeField, Header("Reduction stats")] public Stat ArmorPenetration { get; private set; }
+
+    [field: SerializeField, Header("Resources")] public Stat HealthRegen { get; private set; }
+    [field: SerializeField] public Stat HealthInterval { get; private set; }
 
     private void Awake()
     {
@@ -51,17 +45,16 @@ public class EntityStats : MonoBehaviour, IStats
         Attack = baseStats.baseAttack;
         CriticalChance = baseStats.criticalChance;
         CriticalDamage = baseStats.criticalDamage;
-        IceDamage = baseStats.iceDamage;
-        FireDamage = baseStats.fireDamage;
-        LightningDamage = baseStats.lightningDamage;
+        MagicDamage = baseStats.magicDamage;
 
         Evasion = baseStats.evasion;
         Armor = baseStats.armor;
-        FireResistant = baseStats.fireResistance;
-        IceResistant = baseStats.iceResistance;
-        LightningResistant = baseStats.lightningResistance;
+        MagicResistant = baseStats.magicResistant;
 
         ArmorPenetration = baseStats.armorPenetration;
+
+        HealthRegen = baseStats.healthRegen;
+        HealthInterval = baseStats.healthInterval;
     }
 
     public float GetMaxHealth()
@@ -79,9 +72,9 @@ public class EntityStats : MonoBehaviour, IStats
             totalArmor: totalArmor);
     }
 
-    public ArmorReductionResult GetArmorPenetration()
+    public ArmorPenetrationResult GetArmorPenetration()
     {
-        return new ArmorReductionResult(
+        return new ArmorPenetrationResult(
             totalReduction: ArmorPenetration.Value / StatFormular.ARMOR_PEN_SCALING_CONSTANT);
     }
 
@@ -104,52 +97,20 @@ public class EntityStats : MonoBehaviour, IStats
 
     public DameResult GetElementalDamage()
     {
-        float iceDamage = IceDamage;
-        float fireDamage = FireDamage;
-        float lightningDamage = LightningDamage;
-
-        float highestEleDamage = Mathf.Max(iceDamage, fireDamage, lightningDamage);
-
-        if (highestEleDamage == 0)
-            return new DameResult(DameTypes.None, 0, false, 1);
-        DameTypes dameType = DameTypes.Ice;
-
-        if (highestEleDamage == fireDamage)
-            dameType = DameTypes.Fire;
-
-        else if (highestEleDamage == lightningDamage)
-            dameType = DameTypes.Lightning;
+        float baseDamage = MagicDamage;
 
         float bonusDamage = Intelligence * StatFormular.STR_ATK_CONVERT_RATE;
 
-        // Final elemental damage is calculated by taking the highest elemental damage add half
-        // of the sum of the other two, plus bonus damage from intelligence
-        float finalDamage = highestEleDamage + (iceDamage + fireDamage + lightningDamage - highestEleDamage) * 0.5f + bonusDamage;
-
         return new DameResult(
-            dameType: dameType,
-            baseDamage: finalDamage,
+            dameType: DameTypes.Magical,
+            baseDamage: baseDamage + bonusDamage,
             isCritical: false,
             multiplier: 1);
     }
 
-    public ElementalResistanceResult GetElementalResistance(DameTypes dameType)
+    public ElementalResistanceResult GetMagicalResistant()
     {
         float baseResistance = 0f;
-        switch (dameType)
-        {
-            case DameTypes.Fire:
-                baseResistance = FireResistant;
-                break;
-            case DameTypes.Ice:
-                baseResistance = IceResistant;
-                break;
-            case DameTypes.Lightning:
-                baseResistance = LightningResistant;
-                break;
-            default:
-                return new ElementalResistanceResult(0);
-        }
 
         float bonusResistance = Intelligence.Value * StatFormular.INTEL_ELEMENTAL_RES_CONVERT_RATE;
 

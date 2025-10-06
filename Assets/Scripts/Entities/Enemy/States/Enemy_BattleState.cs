@@ -1,5 +1,8 @@
 ﻿public class Enemy_BattleState : EnemyState
 {
+    // TODO: enum ????
+    private const string BUFF_SOURCE_ID = nameof(Enemy_BattleState);
+
     public Enemy_BattleState(EntityStateMachine stateMachine, Enemy enemy, string animationBoolName)
         : base(stateMachine, enemy, animationBoolName)
     {
@@ -11,7 +14,7 @@
 
         enemy.Stats.MoveSpeed
             .AddModifier(
-                StatModifier.Create(typeof(Enemy_BattleState), enemy.Movement.BattleAnimSpeedMulti, StatModifierType.PercentAdd));
+                StatModifier.Create(BUFF_SOURCE_ID, enemy.Movement.BattleAnimSpeedMulti, StatModifierType.PercentAdd));
 
         if (enemy.Combat.GetTarget() == null)
             enemy.Combat.SetTarget(enemy.Combat.DetectTarget().transform);
@@ -63,6 +66,6 @@
     {
         base.Exit();
 
-        enemy.Stats.MoveSpeed.RemoveModifiersFromSource(GetType());
+        enemy.Stats.MoveSpeed.RemoveModifiersFromSource(BUFF_SOURCE_ID);
     }
 }

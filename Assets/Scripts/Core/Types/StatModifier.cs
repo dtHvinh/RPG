@@ -1,17 +1,19 @@
 ﻿using System;
+using UnityEngine;
 
+[Serializable]
 public class StatModifier
 {
-    public Type Source { get; private set; }
-    public float Value { get; private set; }
-    public StatModifierType Type { get; private set; }
+    [field: SerializeField] public string Source { get; private set; }
+    [field: SerializeField] public float Value { get; private set; }
+    [field: SerializeField] public StatModifierType Type { get; private set; }
 
-    public StatModifier(Type source, float value, StatModifierType type)
+    public StatModifier(string source, float value, StatModifierType type)
     {
         Source = source;
         Value = value;
         Type = type;
     }
 
-    public static StatModifier Create(Type source, float value, StatModifierType type) => new(source, value, type);
+    public static StatModifier Create(string source, float value, StatModifierType type) => new(source, value, type);
 }

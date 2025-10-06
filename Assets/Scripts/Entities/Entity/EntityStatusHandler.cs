@@ -1,37 +1,39 @@
 ﻿using UnityEngine;
-
 [RequireComponent(typeof(IStats))]
-public class EntityStatusHandler : MonoBehaviour
+[RequireComponent(typeof(IHealth))]
+public class EntityStatusHandler : MonoBehaviour, IStatusHandler
 {
-    private IStats stats;
+    private const string NATURAL_BUFFING_SOURCE = "Natural";
     [SerializeField] private StatusEffectList effects;
-    private float accumulator = 0;
+
+    public StatusEffectList Effects => effects;
 
     public float E { get; } = 10;
 
     private void Awake()
     {
         effects = new();
+    }
 
-        stats = GetComponent<IStats>();
+    private void Start()
+    {
+        ApplyBaseRegeneration();
     }
 
     private void Update()
     {
-        accumulator += Time.deltaTime;
-        if (accumulator >= 1f)
-        {
-            effects.Tick();
-            accumulator = 0;
-        }
+        Effects.OnTick(Time.deltaTime);
     }
 
-    [ContextMenu("Apply Slow Effect")]
-    public void Temp1()
+    private void ApplyBaseRegeneration()
     {
-        SlowEffectConfig config = new(.5f, 5, stats);
-        SlowEffect slowEffect = new(typeof(EntityStatusHandler), config);
-
-        effects.AddEffect(slowEffect);
+        IStats stats = GetComponent<IStats>();
+        IHealth health = GetComponent<IHealth>();
+        if (stats != null && health != null)
+        {
+            BaseHealthRegenEffectConfig regenConfig = new(stats, health);
+            BaseHealthRegenEffect regenEffect = new(NATURAL_BUFFING_SOURCE, regenConfig);
+            Effects.AddEffect(regenEffect);
+        }
     }
 }
